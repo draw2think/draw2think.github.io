@@ -1,0 +1,388 @@
+{
+  "id": "pgps9k_152",
+  "meta": [
+    {
+      "label": "PGPS9K"
+    },
+    {
+      "label": "#152"
+    },
+    {
+      "label": "3-turn · 2 rejects + retry",
+      "tag": true
+    }
+  ],
+  "question": "PRYZ is a rhombus. If RK = 5, RY = 13 and m \\angle YRZ = 67, what is m \\angle PKR?",
+  "choices": [
+    {
+      "key": "A",
+      "value": "23"
+    },
+    {
+      "key": "B",
+      "value": "46"
+    },
+    {
+      "key": "C",
+      "value": "90"
+    },
+    {
+      "key": "D",
+      "value": "134"
+    }
+  ],
+  "expected": "C",
+  "input_image": "assets/demos/pgps9k_152_input.png",
+  "viewport": [
+    -3.0,
+    10.0,
+    8.0,
+    26.0
+  ],
+  "turns": [
+    {
+      "index": 1,
+      "phase": null,
+      "signal": null,
+      "summary": "11 ok · 2 ✗",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "R",
+              "x": 0,
+              "y": 12
+            }
+          },
+          "cmd": "R = (0, 12)",
+          "ok": true,
+          "diff": [
+            [
+              "R",
+              "point",
+              "R = (0, 12)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "K",
+              "x": 5,
+              "y": 12
+            }
+          },
+          "cmd": "K = (5, 12)",
+          "ok": true,
+          "diff": [
+            [
+              "K",
+              "point",
+              "K = (5, 12)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Y_temp",
+              "x": 5,
+              "y": 24
+            }
+          },
+          "cmd": "Y_temp = (5, 24)",
+          "ok": true,
+          "diff": [
+            [
+              "Y_temp",
+              "point",
+              "Y_temp = (5, 24)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "diag1_line",
+              "p1": "R",
+              "p2": "K"
+            }
+          },
+          "cmd": "diag1_line = Line(R, K)",
+          "ok": true,
+          "diff": [
+            [
+              "diag1_line",
+              "line",
+              "diag1_line: y = 12"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_perpendicular_line",
+            "args": {
+              "name": "diag2_line",
+              "point": "K",
+              "line": "diag1_line"
+            }
+          },
+          "cmd": "diag2_line = PerpendicularLine(K, diag1_line)",
+          "ok": true,
+          "diff": [
+            [
+              "diag2_line",
+              "line",
+              "diag2_line: x = 5"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_circle",
+            "args": {
+              "name": "c1",
+              "center": "R",
+              "radius": 13
+            }
+          },
+          "cmd": "c1 = Circle(R, 13)",
+          "ok": true,
+          "diff": [
+            [
+              "c1",
+              "circle",
+              "c1: x² + (y - 12)² = 169"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "Y_pts",
+              "obj1": "c1",
+              "obj2": "diag2_line"
+            }
+          },
+          "cmd": "Y_pts = Intersect(c1, diag2_line)",
+          "ok": false,
+          "diff": [],
+          "note": "Intersection point undefined (objects do not intersect)"
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Y",
+              "x": 5,
+              "y": 24
+            }
+          },
+          "cmd": "Y = (5, 24)",
+          "ok": true,
+          "diff": [
+            [
+              "Y_{1}",
+              "point",
+              "Y_{1} = (5, 0)"
+            ],
+            [
+              "Y_{2}",
+              "point",
+              "Y_{2} = (5, 24)"
+            ],
+            [
+              "Y",
+              "point",
+              "Y = (5, 24)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "delete_object",
+            "args": {
+              "name": "Y_pts"
+            }
+          },
+          "cmd": "Delete(Y_pts)",
+          "ok": false,
+          "diff": [],
+          "note": "Object 'Y_pts' not found"
+        },
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "Y_pt1",
+              "obj1": "c1",
+              "obj2": "diag2_line",
+              "index": 1
+            }
+          },
+          "cmd": "Y_pt1 = Intersect(c1, diag2_line, 1)",
+          "ok": true,
+          "diff": [
+            [
+              "Y_pt1",
+              "point",
+              "Y_pt1 = (5, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "Y_pt2",
+              "obj1": "c1",
+              "obj2": "diag2_line",
+              "index": 2
+            }
+          },
+          "cmd": "Y_pt2 = Intersect(c1, diag2_line, 2)",
+          "ok": true,
+          "diff": [
+            [
+              "Y_pt2",
+              "point",
+              "Y_pt2 = (5, 24)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "query_y_coord",
+            "args": {
+              "name": "y_Y1",
+              "arg0": "Y_pt1"
+            }
+          },
+          "cmd": "y_Y1 = y(Y_pt1)",
+          "ok": true,
+          "diff": [
+            [
+              "y_Y1",
+              "numeric",
+              "y_Y1 = 0"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "query_y_coord",
+            "args": {
+              "name": "y_Y2",
+              "arg0": "Y_pt2"
+            }
+          },
+          "cmd": "y_Y2 = y(Y_pt2)",
+          "ok": true,
+          "diff": [
+            [
+              "y_Y2",
+              "numeric",
+              "y_Y2 = 24"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "phase": null,
+      "signal": null,
+      "summary": "3 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "transform_reflect_point",
+            "args": {
+              "name": "Z",
+              "arg0": "R",
+              "arg1": "K"
+            }
+          },
+          "cmd": "Z = Reflect(R, K)",
+          "ok": true,
+          "diff": [
+            [
+              "Z",
+              "point",
+              "Z = (10, 12)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "transform_reflect_point",
+            "args": {
+              "name": "P_pt",
+              "arg0": "Y_pt2",
+              "arg1": "K"
+            }
+          },
+          "cmd": "P_pt = Reflect(Y_pt2, K)",
+          "ok": true,
+          "diff": [
+            [
+              "P_pt",
+              "point",
+              "P_pt = (5, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "query_angle",
+            "args": {
+              "name": "angle_PKR",
+              "p1": "R",
+              "p2": "K",
+              "p3": "P_pt"
+            }
+          },
+          "cmd": "angle_PKR = Angle(R, K, P_pt)",
+          "ok": true,
+          "diff": [
+            [
+              "angle_PKR",
+              "numeric",
+              "angle_PKR = 90.0"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "phase": null,
+      "signal": "answer_emit",
+      "summary": "0 ok",
+      "steps": []
+    }
+  ],
+  "answer": {
+    "value": "C",
+    "choice": "C"
+  }
+}

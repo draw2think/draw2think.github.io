@@ -1,0 +1,1006 @@
+{
+  "id": "genexam_Math_100",
+  "meta": [
+    {
+      "label": "GenExam"
+    },
+    {
+      "label": "#Math_100"
+    },
+    {
+      "label": "circle · chord",
+      "tag": true
+    }
+  ],
+  "question": "Draw a circle with center O and radius 5. Draw diameter AC. Draw a chord BD perpendicular to AC such that it intersects AC at point E, with CE = 2. Mark all points (A, B, C, D, E, O), and indicate the right angle at E where BD is perpendicular to AC. Label the lengths OA=5, OD= 5 and CE = 2.",
+  "choices": [],
+  "expected": null,
+  "input_image": null,
+  "viewport": [
+    -10.0,
+    10.0,
+    -10.0,
+    10.0
+  ],
+  "turns": [
+    {
+      "index": 1,
+      "phase": "construct",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "O",
+              "x": 0,
+              "y": 0
+            }
+          },
+          "cmd": "O = (0, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "O",
+              "point",
+              "O = (0, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_circle",
+            "args": {
+              "name": "circ_O",
+              "center": "O",
+              "radius": 5
+            }
+          },
+          "cmd": "circ_O = Circle(O, 5)",
+          "ok": true,
+          "diff": [
+            [
+              "circ_O",
+              "circle",
+              "circ_O: x² + y² = 25"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "C",
+              "x": 5,
+              "y": 0
+            }
+          },
+          "cmd": "C = (5, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "C",
+              "point",
+              "C = (5, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "A",
+              "x": -5,
+              "y": 0
+            }
+          },
+          "cmd": "A = (-5, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "A",
+              "point",
+              "A = (-5, 0)"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "phase": "construct",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "seg_AC",
+              "p1": "A",
+              "p2": "C"
+            }
+          },
+          "cmd": "seg_AC = Segment(A, C)",
+          "ok": true,
+          "diff": [
+            [
+              "seg_AC",
+              "segment",
+              "seg_AC = 10"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "E",
+              "x": 3,
+              "y": 0
+            }
+          },
+          "cmd": "E = (3, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "E",
+              "point",
+              "E = (3, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_perpendicular_line",
+            "args": {
+              "name": "line_BD",
+              "point": "E",
+              "line": "seg_AC"
+            }
+          },
+          "cmd": "line_BD = PerpendicularLine(E, seg_AC)",
+          "ok": true,
+          "diff": [
+            [
+              "line_BD",
+              "line",
+              "line_BD: x = 3"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "B",
+              "obj1": "line_BD",
+              "obj2": "circ_O",
+              "index": 1
+            }
+          },
+          "cmd": "B = Intersect(line_BD, circ_O, 1)",
+          "ok": true,
+          "diff": [
+            [
+              "B",
+              "point",
+              "B = (3, -4)"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "phase": "construct",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "D",
+              "obj1": "line_BD",
+              "obj2": "circ_O",
+              "index": 2
+            }
+          },
+          "cmd": "D = Intersect(line_BD, circ_O, 2)",
+          "ok": true,
+          "diff": [
+            [
+              "D",
+              "point",
+              "D = (3, 4)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "seg_BD",
+              "p1": "B",
+              "p2": "D"
+            }
+          },
+          "cmd": "seg_BD = Segment(B, D)",
+          "ok": true,
+          "diff": [
+            [
+              "seg_BD",
+              "segment",
+              "seg_BD = 8"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "seg_OD",
+              "p1": "O",
+              "p2": "D"
+            }
+          },
+          "cmd": "seg_OD = Segment(O, D)",
+          "ok": true,
+          "diff": [
+            [
+              "seg_OD",
+              "segment",
+              "seg_OD = 5"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_angle",
+            "args": {
+              "name": "ang_BEC",
+              "arg0": "B",
+              "arg1": "E",
+              "arg2": "C"
+            }
+          },
+          "cmd": "ang_BEC = Angle(B, E, C)",
+          "ok": true,
+          "diff": [
+            [
+              "ang_BEC",
+              "angle",
+              "ang_BEC = 90°"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "phase": "construct",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "set_object_visible",
+            "args": {
+              "name": "line_BD",
+              "visible": "False"
+            }
+          },
+          "cmd": "SetVisible(line_BD, False)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "seg_OA",
+              "p1": "O",
+              "p2": "A"
+            }
+          },
+          "cmd": "seg_OA = Segment(O, A)",
+          "ok": true,
+          "diff": [
+            [
+              "seg_OA",
+              "segment",
+              "seg_OA = 5"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "seg_CE",
+              "p1": "C",
+              "p2": "E"
+            }
+          },
+          "cmd": "seg_CE = Segment(C, E)",
+          "ok": true,
+          "diff": [
+            [
+              "seg_CE",
+              "segment",
+              "seg_CE = 2"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_text",
+            "args": {
+              "name": "label_OA",
+              "arg0": "OA=5",
+              "arg1": "(-2.5, 0.2)",
+              "arg2": "false",
+              "arg3": "true"
+            }
+          },
+          "cmd": "label_OA = Text(\"OA=5\", (-2.5, 0.2), false, true)",
+          "ok": true,
+          "diff": [
+            [
+              "label_OA",
+              "text",
+              "OA=5"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "phase": "construct",
+      "signal": null,
+      "summary": "2 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_text",
+            "args": {
+              "name": "label_OD",
+              "arg0": "OD=5",
+              "arg1": "(1.5, 2.2)",
+              "arg2": "false",
+              "arg3": "true"
+            }
+          },
+          "cmd": "label_OD = Text(\"OD=5\", (1.5, 2.2), false, true)",
+          "ok": true,
+          "diff": [
+            [
+              "label_OD",
+              "text",
+              "OD=5"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_text",
+            "args": {
+              "name": "label_CE",
+              "arg0": "CE=2",
+              "arg1": "(4, 0.2)",
+              "arg2": "false",
+              "arg3": "true"
+            }
+          },
+          "cmd": "label_CE = Text(\"CE=2\", (4, 0.2), false, true)",
+          "ok": true,
+          "diff": [
+            [
+              "label_CE",
+              "text",
+              "CE=2"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "phase": "construct",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "A",
+              "visible": "True"
+            }
+          },
+          "cmd": "SetLabelVisible(A, True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "B",
+              "visible": "True"
+            }
+          },
+          "cmd": "SetLabelVisible(B, True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "C",
+              "visible": "True"
+            }
+          },
+          "cmd": "SetLabelVisible(C, True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "D",
+              "visible": "True"
+            }
+          },
+          "cmd": "SetLabelVisible(D, True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "phase": "construct",
+      "signal": null,
+      "summary": "2 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "E",
+              "visible": "True"
+            }
+          },
+          "cmd": "SetLabelVisible(E, True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "O",
+              "visible": "True"
+            }
+          },
+          "cmd": "SetLabelVisible(O, True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "phase": "construct",
+      "signal": "construct_done",
+      "summary": "0 ok",
+      "steps": []
+    },
+    {
+      "index": 9,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_coord_system",
+            "args": {
+              "x_min": -7,
+              "x_max": 7,
+              "y_min": -6,
+              "y_max": 6
+            }
+          },
+          "cmd": "SetCoordSystem(-7, 7, -6, 6)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_show_axes",
+            "args": {
+              "visible": "False"
+            }
+          },
+          "cmd": "ShowAxes(False)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_show_grid",
+            "args": {
+              "visible": "False"
+            }
+          },
+          "cmd": "ShowGrid(False)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_add_right_angle_mark",
+            "args": {
+              "name": "mark_E",
+              "arg0": "B",
+              "arg1": "E",
+              "arg2": "C"
+            }
+          },
+          "cmd": "mark_E = Angle(B, E, C)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "circ_O",
+              "color": "Black"
+            }
+          },
+          "cmd": "SetColor(circ_O, \"Black\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "seg_AC",
+              "color": "Blue"
+            }
+          },
+          "cmd": "SetColor(seg_AC, \"Blue\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "seg_BD",
+              "color": "Red"
+            }
+          },
+          "cmd": "SetColor(seg_BD, \"Red\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "seg_OD",
+              "color": "Green"
+            }
+          },
+          "cmd": "SetColor(seg_OD, \"Green\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_line_style",
+            "args": {
+              "obj": "seg_OD",
+              "style": 1
+            }
+          },
+          "cmd": "SetLineStyle(seg_OD, 1)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "ang_BEC",
+              "visible": "False"
+            }
+          },
+          "cmd": "SetLabelVisible(ang_BEC, False)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "mark_E",
+              "visible": "False"
+            }
+          },
+          "cmd": "SetLabelVisible(mark_E, False)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "seg_OA",
+              "color": "Blue"
+            }
+          },
+          "cmd": "SetColor(seg_OA, \"Blue\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "seg_CE",
+              "color": "Blue"
+            }
+          },
+          "cmd": "SetColor(seg_CE, \"Blue\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_style",
+            "args": {
+              "obj": "O",
+              "style": 0
+            }
+          },
+          "cmd": "SetPointStyle(O, 0)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_style",
+            "args": {
+              "obj": "A",
+              "style": 0
+            }
+          },
+          "cmd": "SetPointStyle(A, 0)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_style",
+            "args": {
+              "obj": "B",
+              "style": 0
+            }
+          },
+          "cmd": "SetPointStyle(B, 0)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "phase": "render",
+      "signal": null,
+      "summary": "3 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_point_style",
+            "args": {
+              "obj": "C",
+              "style": 0
+            }
+          },
+          "cmd": "SetPointStyle(C, 0)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_style",
+            "args": {
+              "obj": "D",
+              "style": 0
+            }
+          },
+          "cmd": "SetPointStyle(D, 0)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_style",
+            "args": {
+              "obj": "E",
+              "style": 0
+            }
+          },
+          "cmd": "SetPointStyle(E, 0)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "A",
+              "color": "Black"
+            }
+          },
+          "cmd": "SetColor(A, \"Black\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "B",
+              "color": "Black"
+            }
+          },
+          "cmd": "SetColor(B, \"Black\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "C",
+              "color": "Black"
+            }
+          },
+          "cmd": "SetColor(C, \"Black\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "D",
+              "color": "Black"
+            }
+          },
+          "cmd": "SetColor(D, \"Black\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "E",
+              "color": "Black"
+            }
+          },
+          "cmd": "SetColor(E, \"Black\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "O",
+              "color": "Black"
+            }
+          },
+          "cmd": "SetColor(O, \"Black\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_size",
+            "args": {
+              "obj": "A",
+              "size": 5
+            }
+          },
+          "cmd": "SetPointSize(A, 5)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_size",
+            "args": {
+              "obj": "B",
+              "size": 5
+            }
+          },
+          "cmd": "SetPointSize(B, 5)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_point_size",
+            "args": {
+              "obj": "C",
+              "size": 5
+            }
+          },
+          "cmd": "SetPointSize(C, 5)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_size",
+            "args": {
+              "obj": "D",
+              "size": 5
+            }
+          },
+          "cmd": "SetPointSize(D, 5)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_size",
+            "args": {
+              "obj": "E",
+              "size": 5
+            }
+          },
+          "cmd": "SetPointSize(E, 5)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_size",
+            "args": {
+              "obj": "O",
+              "size": 5
+            }
+          },
+          "cmd": "SetPointSize(O, 5)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "phase": "render",
+      "signal": "render_done",
+      "summary": "0 ok",
+      "steps": []
+    }
+  ]
+}

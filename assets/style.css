@@ -1,0 +1,2123 @@
+/* ─── Variables ───────────────────────────────────────────────── */
+:root {
+  --bg:           #ffffff;
+  --bg-alt:       #f7f8fa;
+  --text:         #15181c;
+  --text-muted:   #5d6470;
+  --border:       #e5e7eb;
+  --accent:       #0d7488;   /* teal — constraint engine */
+  --accent-soft:  #e7f2f4;
+  --accent-dark:  #095462;
+  --code-bg:      #f3f4f6;
+  --max-w:        1100px;
+  --max-w-narrow: 800px;
+  --r:            10px;
+  --shadow-sm:    0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:    0 6px 18px -8px rgba(0,0,0,0.18);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 64px; }
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+code, pre {
+  font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+/* ─── Sticky top nav ─────────────────────────────────────────── */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.topnav-row {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  gap: 28px;
+}
+.topnav .brand {
+  font-family: 'Google Sans', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+  color: var(--accent-dark);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.topnav .brand:hover { color: var(--accent); }
+/* When the hero (#top) section is in view, the brand acts as the
+   "active" indicator (underline slides under "Draw2Think") and the
+   redundant Top icon hides itself. */
+.topnav .brand { position: relative; }
+.topnav .brand.active { color: var(--accent-dark); }
+.topnav .brand.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+.topnav.at-top .topnav-top { display: none; }
+.topnav-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-left: auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.topnav-links::-webkit-scrollbar { display: none; }
+.topnav-links a {
+  position: relative;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 6px 0;
+  transition: color 0.15s ease;
+}
+.topnav-links a:hover { color: var(--text); }
+.topnav-links a.active {
+  color: var(--accent-dark);
+}
+.topnav-links a.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+/* Back-to-top icon link: icon-only by default; the "Top" label
+   expands inline on hover/focus. */
+.topnav-links .topnav-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+.topnav-links .topnav-top-label {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  transition: max-width 0.2s ease, margin-left 0.2s ease, opacity 0.2s ease;
+}
+.topnav-links .topnav-top:hover .topnav-top-label,
+.topnav-links .topnav-top:focus .topnav-top-label {
+  max-width: 3em;
+  margin-left: 4px;
+  opacity: 1;
+}
+.topnav-links .topnav-top svg { display: block; }
+
+/* ─── Layout ──────────────────────────────────────────────────── */
+.container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+.container.narrow { max-width: var(--max-w-narrow); }
+/* Anchor-scroll offset for sticky topnav. Sections have padding-top:64
+   and topnav is 53px tall, so a NEGATIVE margin pulls the scroll past
+   the section's top edge, hiding the empty padding strip behind the
+   navbar. Math: section_top + 64 (padding) = 53 (topnav bottom) →
+   section_top = -11. H2 ends up flush against the navbar's bottom. */
+.band[id], .hero[id] { scroll-margin-top: -11px; }
+
+.band {
+  /* Tighter vertical rhythm: top padding 64 → 32 brings the section
+     H2 visibly closer to the divider above. Bottom kept a bit more
+     generous to give the section room to breathe before the next one. */
+  padding: 32px 0 48px;
+  border-bottom: 1px solid var(--border);
+}
+.band.alt { background: var(--bg-alt); }
+.band h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+  color: var(--text);
+}
+.band p, .band li { color: var(--text); }
+.band .lead {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 56em;
+  margin-bottom: 1.5em;
+}
+/* #overview's lead trails the full-width paradigms grid, so its 56em
+   readability cap leaves an awkward ~200px gap on the right that looks
+   like "Focus btn region" leaking sideways. Match the container width
+   instead — the paragraph is short enough that wider lines are fine. */
+#overview .lead { max-width: none; }
+
+/* ─── Hero ────────────────────────────────────────────────────── */
+.hero {
+  padding: 72px 0 56px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% -20%, rgba(13,116,136,0.07), transparent 70%),
+    var(--bg);
+}
+.title {
+  font-family: 'Google Sans', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: clamp(2rem, 4.2vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  margin: 0 0 28px;
+}
+.title .subtitle {
+  display: inline-block;
+  font-size: 0.74em;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+.authors {
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+.authors .author { margin: 0 8px; white-space: nowrap; }
+.authors .author a { color: var(--accent-dark); text-decoration: none; border-bottom: 1px dotted var(--accent-dark); }
+.authors .author a:hover { color: var(--accent); }
+.affiliations {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 18px;
+  margin: 4px 0 8px;
+}
+.contact {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 30px;
+}
+.contact code {
+  background: transparent;
+  padding: 0;
+  color: var(--text-muted);
+}
+
+/* ─── Paper icon: file outline + PDF corner badge ─────────────── */
+.paper-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+}
+.paper-icon .fa-file {
+  font-size: 16px;
+  line-height: 1;
+}
+.paper-icon-badge {
+  position: absolute;
+  bottom: 0px;
+  right: -3px;
+  font-family: 'Inter', sans-serif;
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: #d23a3a;
+  padding: 1px 2px;
+  border-radius: 2px;
+  /* This is a visual badge, not text content — pointer-events: none
+     keeps clicks falling through to the parent <a>, and user-select:
+     none prevents the "PDF" string from being highlighted/selected
+     when the user drags across the Paper button label. */
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+  line-height: 1;
+  box-shadow: 0 0 0 0.5px #b91c1c, 0 1px 1.5px rgba(178, 30, 30, 0.22);
+  border: none;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────── */
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0 40px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+.btn svg { flex-shrink: 0; }
+.btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn.primary:hover {
+  background: var(--accent-dark);
+  color: #fff;
+  border-color: var(--accent-dark);
+}
+
+/* ─── Hero media ──────────────────────────────────────────────── */
+.hero-media {
+  margin: 8px 0 0;
+}
+.hero-media .hero-video,
+.hero-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  box-shadow: var(--shadow-md);
+}
+.hero-media figcaption {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ─── TL;DR ───────────────────────────────────────────────────── */
+.tldr { background: var(--bg-alt); }
+.band-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  margin: 0 0 18px;
+}
+.tldr-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+.tldr-list li {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 16px 20px;
+  font-size: 0.99rem;
+  line-height: 1.6;
+}
+.tldr-list strong { color: var(--accent-dark); }
+
+/* ─── Live demo (3-col interactive card) ─────────────────────── */
+.demo-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-top: 26px;
+  box-shadow: var(--shadow-md);
+}
+.demo-banner {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 18px 22px 16px;
+  background: linear-gradient(180deg, #fafbfc 0%, #f3f5f7 100%);
+  border-bottom: 1px solid var(--border);
+}
+.demo-banner-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 22px;
+}
+.demo-banner-image {
+  flex: 0 0 30%;
+  max-width: 280px;
+  margin: 0;
+  padding-left: 22px;
+  border-left: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.demo-banner-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 160px;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px;
+}
+.demo-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.demo-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+.demo-pill.demo-tag {
+  font-family: 'Inter', sans-serif;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  border-color: transparent;
+  font-weight: 600;
+}
+@media (max-width: 720px) {
+  .demo-banner { flex-direction: column; }
+  .demo-banner-text { padding-right: 0; }
+  .demo-banner-image {
+    flex-basis: auto;
+    max-width: none;
+    margin-top: 14px;
+    padding-left: 0;
+    padding-top: 14px;
+    border-left: none;
+    border-top: 1px dashed var(--border);
+  }
+}
+.demo-question {
+  font-family: 'Google Sans', 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--text);
+  letter-spacing: -0.005em;
+  /* Long GeoGoal / GenExam prompts get a scrollable cap so the banner
+     height stays stable across demos. Font-size unchanged — readability
+     stays consistent with the short Geo3K / PGPS9K prompts. ~3 lines
+     visible; the rest scrolls inside the question's own scrollbar. */
+  max-height: 5.8em;
+  overflow-y: auto;
+  line-height: 1.45;
+  padding-right: 4px;
+}
+.demo-question::-webkit-scrollbar       { width: 5px; }
+.demo-question::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+/* "text input only" placeholder when a demo has no input image —
+   keeps the banner footprint stable across demos. */
+.demo-banner-image .no-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 120px;
+  border: 1.5px dashed var(--border);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+.demo-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  align-items: center;
+}
+.demo-choices span:not(.demo-expected) {
+  font-family: 'JetBrains Mono', monospace;
+}
+.demo-expected {
+  margin-left: auto;
+  font-family: 'Inter', sans-serif;
+  color: var(--accent-dark);
+  font-size: 0.88rem;
+}
+
+/* ─── Bench/problem selector (in the demo card's banner) ───────── */
+.demo-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+.demo-selector button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: var(--bg);
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.demo-selector button:hover {
+  color: var(--accent-dark);
+  border-color: var(--accent);
+}
+.demo-selector button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.demo-selector .pill-bench { font-weight: 600; }
+.demo-selector .pill-id    { font-family: 'JetBrains Mono', monospace; font-size: 0.86rem; opacity: 0.85; }
+.demo-selector .pill-tag   { font-size: 0.82rem; opacity: 0.75; }
+.demo-selector button.active .pill-id,
+.demo-selector button.active .pill-tag { opacity: 0.92; }
+
+/* ─── Turn tabs (top of col-tools) ──────────────────────────────── */
+/* The wrap pins to the col-tools cell width — without min-width:0 the
+   inner flex strip can push the wrap wider than its grid cell and
+   knock the rest of the demo layout off. Overflow on the wrap clips
+   any rendering overshoot; overflow-x: auto on the inner strip is
+   what actually triggers the horizontal scrollbar when the trajectory
+   has too many turns to fit (e.g. 30 turns in GeoGoal). */
+.turn-tabs-wrap {
+  padding: 0 12px 4px;
+  /* Pull the strip 8px closer to the col-head divider above — the
+     `.col-head { margin-bottom: 12px }` rule left too much air between
+     the dashed line and the first tab. */
+  margin: -4px 0 6px;
+  border-bottom: 1px dashed var(--border);
+  min-width: 0;
+  overflow: hidden;
+}
+.turn-tabs {
+  display: flex;
+  gap: 4px;
+  /* `safe center`: when tabs fit, center the strip horizontally
+     (so 2-3-turn demos have the active tab near col2's middle).
+     When they overflow, falls back to flex-start so the first tab
+     stays reachable via scroll — `safe` prevents the centered-clip
+     bug. JS scrollTo (see switchToTurn) handles the overflow case
+     by scrolling the active tab into the visible center. */
+  justify-content: safe center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  scroll-behavior: smooth;
+  /* 12px below the tabs leaves clear room for the 5px scrollbar plus
+     ~7px breathing — earlier `padding-bottom: 4px` was thinner than
+     the scrollbar itself, so its hit-area drifted up into the tab
+     buttons and caused mis-clicks. */
+  padding-bottom: 4px;
+}
+.turn-tabs::-webkit-scrollbar             { height: 5px; }
+.turn-tabs::-webkit-scrollbar-track       { background: transparent; }
+.turn-tabs::-webkit-scrollbar-thumb       { background: var(--border); border-radius: 3px; }
+.turn-tabs::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+.turn-tab {
+  flex: 0 0 auto;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.turn-tab:hover { color: var(--text); background: var(--accent-soft); }
+.turn-tab.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(13, 116, 136, 0.28);
+}
+/* `.has-fails` is set on tabs whose turn has any rejected step, but
+   we deliberately DON'T surface a ✗ marker on the tab — the actual
+   failed step is visible (red + strikethrough) inside the step list
+   once the user opens that turn, which is enough signal. */
+
+/* ─── Failed step (engine reject) ───────────────────────────────── */
+.tool-step.failed .step-num {
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 700;
+}
+.tool-step.failed .step-cmd {
+  color: #b91c1c;
+  text-decoration: line-through;
+  text-decoration-color: rgba(220, 38, 38, 0.45);
+}
+.tool-step.failed:not(.active):not(.visited) { opacity: 0.55; }
+
+/* engine-diff column "rejected" line */
+.engine-diff .diff-fail {
+  display: inline-block;
+  color: #b91c1c;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.engine-diff .diff-note {
+  display: block;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ─── Phase signal "step" (CONSTRUCTION_DONE / RENDER_DONE / ...) ─
+   Empty turns get a single phantom row so autoplay's active slide
+   still lands on them. Visually distinct from normal action rows
+   (dashed border, italic, color-coded by signal type) so the reader
+   reads them as "phase boundary, not an action". Non-clickable. */
+.tool-step.signal-step {
+  cursor: default;
+  font-style: italic;
+  opacity: 0.85;
+}
+.tool-step.signal-step .step-num {
+  /* Filled circle; per-signal background color overridden below.
+     Default = gray for the generic "done" (GeoGoal trailing). */
+  background: var(--text-muted);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+}
+.tool-step.signal-step .step-cmd {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+/* Per-signal circle + text color: amber for CONSTRUCTION_DONE, green
+   for RENDER_DONE, teal for ANSWER_EMIT. Gray default for generic. */
+.tool-step.signal-step.signal-construct_done .step-num { background: #ca8a04; }
+.tool-step.signal-step.signal-construct_done .step-cmd { color: #ca8a04; }
+.tool-step.signal-step.signal-render_done    .step-num { background: #16a34a; }
+.tool-step.signal-step.signal-render_done    .step-cmd { color: #16a34a; }
+.tool-step.signal-step.signal-answer_emit    .step-num { background: var(--accent-dark); }
+.tool-step.signal-step.signal-answer_emit    .step-cmd { color: var(--accent-dark); }
+
+/* signal-* turn-tab variants (color-coded matching the step-row). */
+.turn-tab.signal { font-style: italic; border-style: dashed; }
+.turn-tab.signal[disabled] { cursor: default; }
+.turn-tab.signal[disabled]:hover { background: transparent; }
+.turn-tab.signal-construct_done { color: #ca8a04; border-color: rgba(202, 138, 4, 0.4); }
+.turn-tab.signal-render_done    { color: #16a34a; border-color: rgba(22, 163, 74, 0.4); }
+.turn-tab.signal-answer_emit    { color: var(--accent-dark); border-color: rgba(13, 116, 136, 0.4); }
+/* Active signal tabs: white text, but background takes the signal's
+   OWN color (instead of flipping to the global accent teal).
+   Box-shadow tinted to match. Switching mid-trajectory from
+   amber/green back to teal looked jarring. */
+.turn-tab.active.signal-construct_done {
+  background: #ca8a04;
+  border-color: #ca8a04;
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(202, 138, 4, 0.32);
+}
+.turn-tab.active.signal-render_done {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(22, 163, 74, 0.32);
+}
+.turn-tab.active.signal-answer_emit {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(13, 116, 136, 0.32);
+}
+.turn-tab .turn-sub { opacity: 0.7; font-weight: 500; font-size: 0.66rem; }
+.turn-tab.active .turn-sub { opacity: 0.95; }
+
+/* engine-output / raw-json placeholder for signal steps */
+.engine-diff .signal-msg,
+.raw-json .signal-msg {
+  display: block;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.demo-grid {
+  display: grid;
+  /* Slightly widen col-raw (model JSON output) from 0.8 → 0.9; trim
+     col-tools from 1.3 → 1.1 — engine command lines are short so
+     col-tools was over-allocated, while col-raw's JSON wrapped tight. */
+  grid-template-columns: 0.9fr 1.1fr 1fr;
+  grid-template-areas:
+    "raw tools engine"
+    "canvas canvas canvas";
+}
+.col-raw    { grid-area: raw; }
+.col-tools  { grid-area: tools; }
+.col-engine { grid-area: engine; }
+.col-canvas { grid-area: canvas; }
+.demo-col {
+  border-right: 1px solid var(--border);
+  padding: 16px 0 18px;
+  display: flex;
+  flex-direction: column;
+  /* Grid items default to `min-width: auto`, which means the cell
+     RESISTS shrinking past its content's natural width. For col-tools
+     this is fatal: the 30-turn-tabs strip is naturally ~2000px wide,
+     so the cell expands and pushes col-engine off-screen on the right.
+     `min-width: 0` lets the grid sizing function honor the column's
+     fr-share and triggers overflow on the inner turn-tabs strip
+     instead of overflowing the whole row.
+     Was min-height: 380px — forced empty whitespace under shorter
+     columns; dropped so the three top blocks size to content. */
+  min-width: 0;
+}
+.col-engine { border-right: none; }
+.col-canvas {
+  border-right: none;
+  border-top: 1px solid var(--border);
+  min-height: auto;
+  padding-bottom: 26px;
+}
+.col-head {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 18px 10px;
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 12px;
+}
+
+/* Col 1: tool steps */
+.col-tools .tool-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  /* Long-turn trajectories (PGPS9K #152's Turn 1 has 13 steps,
+     GeoGoal's Turn 1 has 14 actions trailing into the answer card)
+     would otherwise inflate the row height beyond the other columns'
+     natural footprint, making the canvas / engine-output columns
+     look short. Cap to ~6 steps tall and let the list scroll
+     inside; autoplay keeps the active step centered (see showStep). */
+  max-height: 220px;
+  overflow-y: auto;
+  /* Breathing room at the bottom so the answer-step's revealed
+     box-shadow + accent border don't get clipped by the scroll edge. */
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.col-tools .tool-list::-webkit-scrollbar       { width: 5px; }
+.col-tools .tool-list::-webkit-scrollbar-track { background: transparent; }
+.col-tools .tool-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.col-tools .tool-list::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+.tool-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: center;        /* was start — pulls cmd vertically tight */
+  column-gap: 10px;
+  row-gap: 2px;
+  /* Compressed step height: padding 8→4, margin 2→1 — fits one more
+     step in the same viewport so multi-turn trajectories breathe. */
+  padding: 4px 14px 4px 12px;
+  margin: 1px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.16s ease, transform 0.16s ease, opacity 0.3s ease;
+}
+/* Unvisited steps (haven't been reached by autoplay yet) appear dim;
+   the moment showStep flags them `.visited`, they snap to full color. */
+.tool-step:not(.visited):not(.answer-step) {
+  opacity: 0.4;
+}
+.tool-step.visited:not(.active):not(.answer-step) {
+  opacity: 1;
+}
+.tool-step:hover,
+.tool-step:focus,
+.tool-step.active {
+  background: var(--accent-soft);
+  outline: none;
+}
+.tool-step.active {
+  transform: translateX(2px);
+}
+.tool-step .step-num {
+  grid-row: 1 / 3;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--code-bg);
+  color: var(--text-muted);
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  transition: all 0.16s ease;
+  margin-top: 2px;
+}
+.tool-step.active .step-num {
+  background: var(--accent);
+  color: #fff;
+}
+.tool-step .step-cmd {
+  grid-column: 2;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text);
+  background: transparent;
+  padding: 0;
+  word-break: break-all;
+}
+.tool-step .step-note {
+  grid-column: 2;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+/* Hide the per-step verbal annotations (`Place vertex C at origin`,
+   etc.) — the code line is self-explanatory. Keep the answer-step note
+   visible (it carries the pass/fail + match info). */
+.tool-step:not(.answer-step) .step-note { display: none; }
+.tool-step.answer-step {
+  margin-top: 10px;
+  background: rgba(13,116,136,0.06);
+  cursor: default;
+  /* Dimmed by default — comes alive only during the autoplay answer
+     reveal phase (thinking → revealed). */
+  opacity: 0.5;
+  transition: opacity 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+}
+.tool-step.answer-step:hover { background: rgba(13,116,136,0.10); }
+.tool-step.answer-step .step-num {
+  background: var(--accent-dark);
+  /* Hide the ✓ glyph until the autoplay's reveal phase. Inactive +
+     thinking states show an EMPTY green circle — the check pops in
+     only after the model's "thinking" pulse resolves, conveying the
+     "judging correctness → verdict" arc the user asked for. */
+  color: transparent;
+  font-weight: 700;
+}
+.tool-step.answer-step.revealed .step-num {
+  color: #fff;
+}
+/* Answer value ("92.5 (choice B)") timing:
+     inactive          : hidden — row reads just "ANSWER:"
+     .thinking         : value appears — model has produced the answer,
+                         circle still empty + pulsing while the
+                         "verdict" check is pending
+     .revealed         : value stays + ✓ pops into the green circle
+   So .revealed's only job is the ✓ pop animation — the value+choice
+   are already on screen by then. */
+.tool-step.answer-step .answer-value { display: none; }
+.tool-step.answer-step.thinking .answer-value,
+.tool-step.answer-step.revealed .answer-value { display: inline; }
+.tool-step.answer-step .step-cmd { color: var(--accent-dark); font-weight: 600; }
+
+/* Phase 2 — "thinking" pulse, like an LLM computing the answer. */
+.tool-step.answer-step.thinking {
+  opacity: 1;
+  background: rgba(13,116,136,0.12);
+}
+.tool-step.answer-step.thinking .step-num {
+  animation: ans-pulse 0.95s ease-in-out infinite;
+}
+.tool-step.answer-step.thinking .step-cmd::after {
+  content: ' \2026';                /* trailing ellipsis */
+  color: var(--accent-dark);
+  animation: ans-dots 1.2s steps(4, end) infinite;
+  opacity: 0.65;
+  margin-left: 2px;
+}
+@keyframes ans-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(13,116,136, 0.55); }
+  50%      { box-shadow: 0 0 0 7px rgba(13,116,136, 0); }
+}
+@keyframes ans-dots {
+  0%   { content: ' .'; }
+  25%  { content: ' ..'; }
+  50%  { content: ' ...'; }
+  75%  { content: ' ..'; }
+  100% { content: ' .'; }
+}
+
+/* Phase 3 — revealed: outer frame ring + ✓ pop. */
+.tool-step.answer-step.revealed {
+  opacity: 1;
+  background: var(--accent-soft);
+  box-shadow:
+    0 0 0 2px var(--accent),
+    0 6px 18px -6px rgba(13,116,136, 0.35);
+  animation: ans-card-pop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tool-step.answer-step.revealed .step-num {
+  animation: ans-check-pop 0.62s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes ans-card-pop {
+  0%   { transform: scale(0.97); }
+  60%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+@keyframes ans-check-pop {
+  0%   { transform: scale(0.2); opacity: 0; }
+  55%  { transform: scale(1.35) rotate(-6deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* Col 1: raw model response (JSON) */
+.raw-json {
+  margin: 0;
+  padding: 0 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--text);
+  overflow-x: auto;
+  flex: 1;
+  white-space: pre;
+}
+.raw-json .json-head {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--border);
+}
+.raw-json .j-key   { color: var(--accent-dark); font-weight: 600; }
+.raw-json .j-str   { color: #b45309; }
+.raw-json .j-num   { color: #0f766e; }
+.raw-json .j-bool  { color: #9333ea; }
+.raw-json .j-punct { color: var(--text-muted); }
+
+/* Col 3: engine diff */
+.engine-diff {
+  margin: 0;
+  padding: 0 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--text);
+  overflow-x: auto;
+  flex: 1;
+  white-space: pre;
+}
+.engine-diff .diff-head {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--border);
+}
+.engine-diff .diff-add { color: #16a34a; font-weight: 700; }
+.engine-diff .diff-name { color: var(--accent-dark); font-weight: 600; }
+.engine-diff .diff-type { color: var(--text-muted); font-size: 0.94em; }
+.engine-diff .diff-val { color: var(--text); font-weight: 500; }
+
+/* Col 4: GeoGebra canvas (full-width row below the 3 text cols) */
+.col-canvas {
+  align-items: stretch;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+.canvas-wrap {
+  /* Aspect ratio chosen so the GRAPHICS area inside (the right ~61.5%
+     of the applet width, since the algebra panel takes the left
+     ~38.5% in 'classic' mode) is a true square. The old fixed
+     `height: 480px` compressed the drawing area into a wide rectangle
+     whenever the wrap got wider than ~780px.
+     ratio: wrap_width : wrap_height = 1 : 0.615 ≈ 13 : 8. */
+  width: 100%;
+  max-width: 820px;
+  aspect-ratio: 13 / 8;
+  margin: 8px auto 0;
+  background: var(--bg-alt);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+#ggb-applet,
+#ggb-applet > * {
+  width: 100% !important;
+  height: 100% !important;
+}
+.canvas-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+.canvas-fallback code {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 4px;
+}
+
+@media (max-width: 960px) {
+  .demo-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "raw"
+      "tools"
+      "engine"
+      "canvas";
+  }
+  .demo-col {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    min-height: auto;
+  }
+  .demo-col:last-child { border-bottom: none; }
+  .col-canvas { border-top: none; }
+  .canvas-wrap { margin: 8px auto 0; }
+}
+
+/* ─── Ablation cards (expandable) ────────────────────────────── */
+.ablation-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+.ablation-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.ablation-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+.ablation-card[open] {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+.ablation-card > summary {
+  position: relative;
+  cursor: pointer;
+  padding: 18px 56px 18px 22px;
+  list-style: none;
+}
+.ablation-card > summary::-webkit-details-marker { display: none; }
+.ablation-card .ablation-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  padding: 3px 9px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.ablation-card h3 {
+  font-family: 'Google Sans', 'Inter', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.ablation-stat {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+}
+.ablation-stat .num {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  line-height: 1;
+}
+.ablation-stat .num small {
+  font-size: 0.65em;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 1px;
+}
+.ablation-stat .num-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.ablation-stat .sep {
+  color: var(--border);
+  font-weight: 700;
+  margin: 0 4px;
+}
+.ablation-card .ablation-teaser {
+  margin: 0;
+  font-size: 0.94rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+.ablation-card .chev {
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.22s ease, border-color 0.18s ease;
+}
+.ablation-card[open] .chev {
+  transform: rotate(225deg);
+  border-color: var(--accent);
+}
+.ablation-card .ablation-body {
+  padding: 0 22px 22px;
+  border-top: 1px dashed var(--border);
+  margin-top: 4px;
+  padding-top: 16px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.ablation-card .ablation-body p {
+  margin: 0 0 12px;
+}
+.ablation-card .ablation-body p:last-child { margin-bottom: 0; }
+.ablation-card .ablation-body strong { color: var(--accent-dark); }
+.ablation-card code {
+  font-size: 0.86em;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--text);
+}
+
+/* ─── Findings list (limit-rlvr inspired) ───────────────────── */
+.findings-list {
+  list-style: none;
+  padding: 0;
+  margin: 26px 0 0;
+}
+.findings-list li {
+  position: relative;
+  padding: 18px 0 18px 30px;
+  border-bottom: 1px dashed var(--border);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+.findings-list li:last-child {
+  border-bottom: none;
+}
+.findings-list li::before {
+  content: '\2022';
+  position: absolute;
+  left: 6px;
+  top: 14px;
+  color: var(--accent);
+  font-size: 1.5em;
+  line-height: 1;
+}
+.findings-list strong {
+  display: inline;
+  font-family: 'Google Sans', 'Inter', sans-serif;
+  font-weight: 700;
+  color: var(--accent-dark);
+  letter-spacing: -0.005em;
+}
+
+/* ─── Insight / mechanism / future sections ──────────────────── */
+.insight-grid,
+.future-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+.insight-card,
+.future-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px 20px 22px;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+.insight-card:hover,
+.future-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.insight-kicker,
+.future-kicker {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin-bottom: 12px;
+}
+.insight-card h3,
+.future-card h3,
+.mechanism-item h3 {
+  font-family: 'Google Sans', 'Inter', sans-serif;
+  font-size: 1.08rem;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+.insight-card p,
+.future-card p {
+  color: var(--text-muted);
+  font-size: 0.96rem;
+  line-height: 1.65;
+  margin: 0;
+}
+.mechanism-list {
+  display: grid;
+  gap: 0;
+  margin-top: 24px;
+  border-top: 1px dashed var(--border);
+}
+.mechanism-item {
+  padding: 22px 0;
+  border-bottom: 1px dashed var(--border);
+}
+.mechanism-item p {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ─── Paradigms grid (interactive fig 1) ─────────────────────── */
+.paradigms {
+  display: grid;
+  grid-template-columns: 20fr 19fr 26fr 35fr;
+  gap: 10px;
+  margin: 26px 0 16px;
+}
+.paradigm {
+  --p-accent: #6b7280;
+  --p-soft:   #f3f4f6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--p-soft);     /* whole column shares the same faint hue */
+  border: 1.5px solid var(--p-accent);
+  border-radius: var(--r);
+  padding: 16px 14px 14px;
+  transition: opacity 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  cursor: default;
+}
+/* Three "prior paradigm" columns share a warm palette (rose →
+   brown → orange) — visually grouping them as "limitations".
+   Draw2Think breaks the warm sequence with cool teal as solution.
+   --p-soft  = card BG  (very faint)
+   --p-badge = bottom-tag BG (same hue, slightly deeper) */
+.paradigm[data-flavor="visual"] {
+  --p-accent: #be185d;
+  --p-soft:   hsl(340, 30%, 97%);
+  --p-badge:  hsl(340, 55%, 93%);
+}
+.paradigm[data-flavor="text"]   {
+  --p-accent: #5c1f0a;                       /* deeper brown */
+  --p-soft:   hsl( 28, 40%, 96%);
+  --p-badge:  hsl( 28, 55%, 90%);
+}
+.paradigm[data-flavor="code"]   {
+  --p-accent: #c2410c;
+  --p-soft:   hsl( 30, 50%, 95%);
+  --p-badge:  hsl( 30, 65%, 90%);
+}
+.paradigm[data-flavor="ours"]   {
+  --p-accent: var(--accent-dark);
+  --p-soft:   hsl(187, 40%, 96%);
+  --p-badge:  hsl(187, 45%, 92%);
+}
+
+/* Three "prior paradigm" cards: 1px LONG-dashed border marking them
+   as "limited routes". Draw2Think keeps its 1.5px solid border to
+   read as the proposed system. Dashes use --p-dash which defaults
+   to a softer 45%-alpha mix and ramps to full accent on hover. */
+.paradigm[data-flavor="visual"],
+.paradigm[data-flavor="text"],
+.paradigm[data-flavor="code"] {
+  --p-dash: color-mix(in srgb, var(--p-accent) 45%, transparent);
+  border: 1px solid transparent;
+  background:
+    /* dashed border layers: top, bottom, left, right.
+       Each is a linear-gradient repeated on one edge only. */
+    linear-gradient(90deg, var(--p-dash) 50%, transparent 50%) top    / 14px 1px repeat-x,
+    linear-gradient(90deg, var(--p-dash) 50%, transparent 50%) bottom / 14px 1px repeat-x,
+    linear-gradient( 0deg, var(--p-dash) 50%, transparent 50%) left   / 1px 14px repeat-y,
+    linear-gradient( 0deg, var(--p-dash) 50%, transparent 50%) right  / 1px 14px repeat-y,
+    var(--p-soft);
+  background-origin: border-box;
+  background-clip: border-box, border-box, border-box, border-box, padding-box;
+  transition: opacity 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+}
+/* On hover/focus, dashes darken to full accent, and we suppress the
+   inherited `.paradigm:hover { border-color: var(--p-accent) }` rule
+   so a solid outline doesn't appear on top of the dashed background. */
+.paradigm[data-flavor="visual"]:hover,
+.paradigm[data-flavor="visual"]:focus-within,
+.paradigm[data-flavor="text"]:hover,
+.paradigm[data-flavor="text"]:focus-within,
+.paradigm[data-flavor="code"]:hover,
+.paradigm[data-flavor="code"]:focus-within {
+  --p-dash: var(--p-accent);
+  border-color: transparent;
+}
+
+/* Hover one card → other PRIOR cards dim, target lifts. Draw2Think
+   (the proposed solution) is excluded — it stays at full opacity
+   regardless, so the "ours vs prior" contrast remains visible even
+   when the user is comparing the prior paradigms. */
+.paradigms:hover .paradigm:not(:hover):not(:focus-within):not([data-flavor="ours"]) {
+  opacity: 0.6;
+}
+.paradigm:hover, .paradigm:focus-within {
+  transform: translateY(-2px);
+  border-color: var(--p-accent);
+  box-shadow: 0 8px 22px -10px rgba(0,0,0,0.18);
+}
+.paradigm-ours {
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px -8px rgba(13,116,136, 0.35);
+}
+
+/* Header */
+.paradigm-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 12px;
+  color: var(--p-accent);
+}
+.paradigm-head h3 {
+  font-family: 'Google Sans', 'Inter', sans-serif;
+  font-size: 0.96rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--p-accent);
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+  flex: 1;
+  min-width: 0;
+}
+.paradigm-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  background: var(--p-soft);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.paradigm-star {
+  color: #f59e0b;
+  font-size: 1.1rem;
+  background: rgba(245,158,11,0.12);
+}
+/* Draw2Think header (ours) is a 2-row centered stack:
+   row 1 = "Constraint-Agentic Harness ★" (h3 + inline star after text)
+   row 2 = "Draw2Think (ours)" — plain accent-coloured subtitle
+   Star drops its rounded box and becomes an inline accent next to the
+   title text; the subtitle drops its pill background and reads as a
+   regular italic line. */
+.paradigm[data-flavor="ours"] .paradigm-head {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+.paradigm[data-flavor="ours"] .paradigm-head h3 {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.paradigm[data-flavor="ours"] .paradigm-head .paradigm-star {
+  width: auto;
+  height: auto;
+  background: transparent;
+  font-size: 1rem;
+  line-height: 1;
+  display: inline;
+}
+.paradigm[data-flavor="ours"] .paradigm-head .paradigm-mine {
+  background: transparent;
+  color: var(--p-accent);
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0;
+}
+.paradigm[data-flavor="ours"] .paradigm-head .paradigm-mine-tag {
+  font-weight: 500;
+  opacity: 0.7;
+}
+.paradigm-mine {
+  font-family: 'Google Sans', 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent);
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+/* Flow nodes */
+.paradigm-flow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.flow-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: #fff;              /* white box on tinted card BG */
+  border: 1px solid color-mix(in srgb, var(--p-accent) 22%, transparent);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+.flow-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--p-accent);
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--p-accent) 30%, transparent);
+  padding: 1px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+}
+.flow-tag-ok { background: #16a34a; color: #fff; border-color: transparent; }
+.flow-text { color: var(--text); flex: 1; min-width: 0; }
+.flow-text small { color: var(--text-muted); font-size: 0.85em; }
+.flow-arrow {
+  align-self: center;
+  font-size: 0.95rem;
+  color: var(--p-accent);
+  opacity: 0.55;
+  line-height: 1;
+  margin: 1px 0;
+}
+.flow-loop, .flow-arrow-pair { font-size: 1.05rem; opacity: 0.75; }
+.flow-cap {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* Per-paradigm flow specials */
+.flow-render { flex-direction: column; align-items: stretch; padding: 8px; }
+.mini-render { width: 100%; height: 56px; display: block; }
+.flow-trace {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  line-height: 1.55;
+  color: var(--text);
+  padding: 8px 10px;
+}
+.trace-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trace-doubt { color: #b45309; font-style: italic; opacity: 0.85; }
+.flow-answer { background: rgba(22,163,74,0.07); border-color: rgba(22,163,74,0.3); }
+
+.script-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.script-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  background: var(--p-soft);
+  border: 1px solid color-mix(in srgb, var(--p-accent) 22%, transparent);
+  color: var(--p-accent);
+  padding: 4px 7px;
+  border-radius: 4px;
+  text-align: center;
+}
+.flow-assert .assert-snippet {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text);
+  background: transparent;
+  padding: 0;
+}
+.flow-pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--p-accent);
+  background: var(--p-soft);
+  border: 1px solid color-mix(in srgb, var(--p-accent) 18%, transparent);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+.pipe-arrow { color: var(--text-muted); }
+
+
+.flow-twin {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+/* Draw2Think column has the densest content — stack the flow-tag
+   above the text so each node is half as wide as the inline layout.
+   This lets the whole column hold its content without pushing the
+   grid to give it extra width at the expense of col 1 and col 3. */
+.paradigm[data-flavor="ours"] .flow-node {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+.paradigm[data-flavor="ours"] .flow-node .flow-tag {
+  margin-bottom: 1px;
+}
+
+/* ─── Draw2Think solid-line arrows + hover flowing dot ────────── */
+.d2t-flow {
+  position: relative;
+  padding-right: 18px;          /* room for return arrow on the right */
+  gap: 0;                       /* arrows hug block edges, no extra gap */
+}
+.d2t-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  align-items: center;
+  justify-items: center;
+  margin: 0;
+}
+.d2t-twin {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0;                       /* horizontal arrow flush with both nodes */
+}
+/* Defensive sizing — HTML width/height attrs handle most browsers, but
+   `max-width/max-height: 100%` here pins the SVG even if an extension
+   wipes the inline width (Chrome falls back to 300×150 otherwise). */
+.d2t-arrow,
+.d2t-return {
+  display: block;
+  overflow: visible;
+  max-width: 100%;
+  max-height: 100%;
+}
+.d2t-arrow-down               { width: 16px; height: 24px; }
+.d2t-arrow-green.d2t-arrow-down { width: 18px; height: 28px; }
+.d2t-arrow-right              { width: 28px; height: 16px; }
+
+.d2t-arrow line,
+.d2t-arrow polyline,
+.d2t-return line,
+.d2t-return polyline {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.d2t-arrow-blue line,
+.d2t-arrow-blue polyline {
+  stroke: #2563eb;            /* indigo-blue for "unverified" hops */
+  stroke-width: 1.4;
+}
+.d2t-arrow-green line,
+.d2t-arrow-green polyline {
+  stroke: #16a34a;            /* green for "verified" feedback */
+  stroke-width: 2.2;
+}
+.d2t-arrow-blue .d2t-flow-dot  { fill: #2563eb; }
+.d2t-arrow-green .d2t-flow-dot { fill: #16a34a; }
+.d2t-flow-dot {
+  opacity: 0;                 /* hidden until hover */
+}
+
+/* L-shaped return: observation east → up → left into VLM. */
+.d2t-return-l {
+  position: absolute;
+  top: 30px;        /* aligns with VLM bottom-edge midpoint */
+  bottom: 28px;     /* aligns with observation top-edge midpoint */
+  right: -2px;
+  width: calc(100% - 70px);   /* spans from right edge inward */
+  pointer-events: none;
+  overflow: visible;
+}
+.d2t-return-l path,
+.d2t-return-l polyline {
+  stroke: #16a34a;
+  stroke-width: 1.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;   /* stroke stays crisp under stretch */
+}
+.d2t-return-l .d2t-flow-dot { fill: #16a34a; }
+
+/* Corner label */
+.d2t-feedback-label {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: center;
+  font-family: 'Noto Sans', 'Inter', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #16a34a;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+/* Observation bullets */
+.observation-bullets {
+  list-style: none;
+  padding: 4px 0 0 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 0.66rem;
+  line-height: 1.45;
+  color: var(--text);
+  width: 100%;
+}
+.observation-bullets li {
+  padding-left: 12px;
+  position: relative;
+}
+.observation-bullets li::before {
+  content: '\2022';
+  position: absolute;
+  left: 2px;
+  top: -1px;
+  color: var(--p-accent);
+  font-weight: 700;
+}
+
+/* Hover Draw2Think → kick all 4 arrows into a continuous dot flow */
+.paradigm[data-flavor="ours"]:hover .d2t-flow-dot-vert {
+  animation: d2t-dot-vert 1.5s linear infinite;
+  opacity: 1;
+}
+.paradigm[data-flavor="ours"]:hover .d2t-flow-dot-horiz {
+  animation: d2t-dot-horiz 1.5s linear infinite;
+  opacity: 1;
+}
+.paradigm[data-flavor="ours"]:hover .d2t-flow-dot-up {
+  animation: d2t-dot-up 1.8s linear infinite;
+  opacity: 1;
+}
+@keyframes d2t-dot-vert {
+  0%   { transform: translate(0, 0);    opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translate(0, 20px); opacity: 0; }
+}
+@keyframes d2t-dot-horiz {
+  0%   { transform: translate(0, 0);    opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translate(24px, 0); opacity: 0; }
+}
+@keyframes d2t-dot-up {
+  0%   { transform: translate(0, 0);     opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translate(0, -85px); opacity: 0; }
+}
+.engine-verdicts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+  font-size: 0.66rem;
+  font-family: 'JetBrains Mono', monospace;
+  width: 100%;
+}
+.v-ok  { color: #16a34a; }
+.v-bad { color: #dc2626; }
+
+/* Badge + caveat — each column's badge now uses its own flavor
+   colors: accent text/border + slightly-deeper-than-BG fill. */
+.paradigm-badge,
+.paradigm-badge * {
+  font-family: 'Noto Sans', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
+}
+.paradigm-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--p-accent);
+  background: var(--p-badge);
+  border: 1px solid var(--p-accent);
+  padding: 5px 8px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+/* Optional second-line subtitle inside a badge — smaller, near-
+   black, darker than the caveat line below so it reads as part of
+   the badge group (not as muted ancillary text). */
+.paradigm-badge-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: #15181c;
+  letter-spacing: 0;
+}
+.paradigm-caveat {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+  /* Center the emoji + text both horizontally and vertically inside
+     the reserved bottom block. Min-height keeps badge alignment
+     constant across the four cards. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  min-height: 3em;
+}
+.caveat-emoji {
+  color: #b45309;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  line-height: 1;
+  margin-top: 1px;
+}
+.paradigm-caveat-ours .caveat-emoji { color: #16a34a; }
+
+/* Noto animated emoji rendered as a fixed square. Default = static
+   PNG (first frame look); on parent .paradigm hover, swap background
+   to the animated WebP — pure CSS, no JS. */
+.caveat-emoji-anim {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-top: -2px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.emoji-cry {
+  background-image: url('https://fonts.gstatic.com/s/e/notoemoji/latest/1f622/72.png');
+}
+.emoji-grin {
+  background-image: url('https://fonts.gstatic.com/s/e/notoemoji/latest/1f603/72.png');
+}
+/* Nudge the grin emoji slightly left of its centered position so the
+   sprite's optical center (which sits a hair right-of-geometric) aligns
+   better with the "Typed actions" text. transform doesn't reflow. */
+.paradigm-badge-ours .emoji-grin { transform: translateX(-2px); }
+.paradigm:hover .emoji-cry,
+.paradigm:focus-within .emoji-cry {
+  background-image: url('https://fonts.gstatic.com/s/e/notoemoji/latest/1f622/512.webp');
+}
+.paradigm:hover .emoji-grin,
+.paradigm:focus-within .emoji-grin {
+  background-image: url('https://fonts.gstatic.com/s/e/notoemoji/latest/1f603/512.webp');
+}
+.paradigm-caveat-ours { color: var(--accent-dark); }
+
+.paradigms-caption {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin: 16px 0 0;
+  max-width: 68em;
+  line-height: 1.6;
+}
+
+@media (max-width: 960px) {
+  .paradigms { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .paradigms { grid-template-columns: 1fr; }
+}
+
+/* ─── Paradigms focus / fullscreen mode ─────────────────────────
+   Click the .paradigms-zoom-btn (top-right of #overview) to enter
+   focus mode: everything except the sticky topnav + the 4-col grid
+   is hidden, the grid stretches to fill the viewport, and an `×`
+   exit button appears in the top-right. ESC also exits. State is
+   mirrored to URL hash `#focus=paradigms` so an arXiv figure can
+   deep-link directly into the focused view. */
+/* Focus button: SIBLING of .paradigms inside #overview's .container.
+   Absolute-positioned to the container's top-right corner, fully OUT
+   of the grid's layout flow — paradigms grid keeps every pixel of
+   its width, no space carved out on the right. */
+.band#overview > .container { position: relative; }
+
+.paradigms-zoom-btn {
+  position: absolute;
+  top: 32px;        /* roughly H2 baseline */
+  right: 24px;      /* match container padding */
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.paradigms-zoom-btn:hover {
+  color: var(--accent-dark);
+  border-color: var(--accent);
+}
+
+.focus-exit {
+  display: none;
+  position: fixed;
+  top: 64px;
+  right: 24px;
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.focus-exit:hover { color: var(--accent-dark); border-color: var(--accent); }
+body.focus-paradigms .focus-exit { display: inline-flex; }
+
+body.focus-paradigms { overflow: hidden; }
+/* Hide every direct body child except the topnav, the overview
+   section, the exit button, and any <script> tags. */
+body.focus-paradigms > *:not(.topnav):not(#overview):not(.focus-exit):not(script) {
+  display: none !important;
+}
+/* Pin the section as a fixed full-viewport stage below the topnav.
+   The container KEEPS its normal max-width + padding so the .paradigms
+   grid retains its natural layout dimensions — we then scale the grid
+   visually via transform:scale (JS-driven). No reflow, no re-layout —
+   just a magnified view of the exact same grid. */
+body.focus-paradigms #overview {
+  position: fixed;
+  top: 52px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: var(--bg);
+  overflow: hidden;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body.focus-paradigms #overview > .container {
+  margin: auto;
+  position: static;
+}
+body.focus-paradigms #overview > .container > h2,
+body.focus-paradigms #overview > .container > .lead,
+body.focus-paradigms #overview > .container > .paradigms-caption,
+body.focus-paradigms .paradigms-zoom-btn {
+  display: none !important;
+}
+body.focus-paradigms .paradigms {
+  transform-origin: center center;
+  /* `transform: scale(N)` is set inline by site.js after measuring
+     the grid's natural size vs available viewport. */
+}
+
+/* ─── Figures ────────────────────────────────────────────────── */
+.figwide {
+  margin: 32px 0 0;
+}
+.figwide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.figwide figcaption {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  max-width: 68em;
+}
+
+/* ─── Loop steps ─────────────────────────────────────────────── */
+.loop {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0;
+  counter-reset: step;
+}
+.loop li {
+  position: relative;
+  padding: 14px 18px 14px 64px;
+  border-radius: var(--r);
+  background: #fff;
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+  counter-increment: step;
+  font-size: 0.98rem;
+}
+.loop li::before {
+  content: counter(step);
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.loop-tag {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+.caption-note {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  border-left: 2px solid var(--border);
+  padding-left: 14px;
+  margin-top: 24px;
+}
+
+/* ─── Result cards ───────────────────────────────────────────── */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 28px 0 18px;
+}
+.result-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 22px 20px;
+  text-align: left;
+  transition: border-color 0.15s ease;
+}
+.result-card:hover { border-color: var(--accent); }
+.result-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.result-value {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  line-height: 1;
+}
+.result-unit { font-size: 0.6em; color: var(--text-muted); margin-left: 1px; }
+.result-foot {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+.muted { color: var(--text-muted); }
+.footnote {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 18px;
+  border-top: 1px dashed var(--border);
+  padding-top: 14px;
+}
+
+/* ─── BibTeX ─────────────────────────────────────────────────── */
+.bibtex-block {
+  position: relative;
+  margin: 16px 0 8px;
+}
+.bibtex {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  overflow-x: auto;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.bibtex code { background: transparent; padding: 0; color: var(--text); }
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 0;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+.copy-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+  background: #fff;
+}
+.copy-btn:active {
+  transform: translateY(1px);
+}
+.copy-btn .copy-icon-done { display: none; color: #16a34a; }
+.copy-btn.copied .copy-icon { display: none; }
+.copy-btn.copied .copy-icon-done { display: inline-block; }
+.copy-btn.copied {
+  border-color: #16a34a;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────── */
+.footer {
+  padding: 40px 0;
+  background: var(--bg-alt);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+.footer p { margin: 0 0 8px; }
+.footer .meta { font-size: 0.82rem; }
+.footer a { color: var(--accent-dark); }
+
+/* ─── Misc ───────────────────────────────────────────────────── */
+em { font-style: italic; color: var(--text); }
+strong { font-weight: 600; }
+a { color: var(--accent-dark); }
+a:hover { color: var(--accent); }
+sup { font-size: 0.72em; vertical-align: super; }
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .band { padding: 44px 0; }
+  .hero { padding: 48px 0 36px; }
+  .buttons { gap: 8px; }
+  .btn { padding: 8px 12px; font-size: 0.86rem; }
+  .insight-grid,
+  .future-grid { grid-template-columns: 1fr; }
+  .results-grid { grid-template-columns: 1fr 1fr; }
+  .topnav-row { gap: 16px; }
+  .topnav-links { gap: 16px; }
+  .topnav-links a { font-size: 0.86rem; }
+}
+@media (max-width: 420px) {
+  .results-grid { grid-template-columns: 1fr; }
+  .authors .author { display: block; margin: 2px 0; }
+}

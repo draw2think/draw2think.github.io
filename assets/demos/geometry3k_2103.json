@@ -1,0 +1,201 @@
+{
+  "id": "geometry3k_2103",
+  "meta": [
+    {
+      "label": "Geometry3K"
+    },
+    {
+      "label": "#2103"
+    },
+    {
+      "label": "trapezoid · perimeter",
+      "tag": true
+    }
+  ],
+  "question": "Find the perimeter of the figure. Round to the nearest tenth if necessary.",
+  "choices": [
+    {
+      "key": "A",
+      "value": "73.5"
+    },
+    {
+      "key": "B",
+      "value": "92.5"
+    },
+    {
+      "key": "C",
+      "value": "184.9"
+    },
+    {
+      "key": "D",
+      "value": "500.0"
+    }
+  ],
+  "expected": "B",
+  "input_image": "assets/demos/geometry3k_2103_input.png",
+  "viewport": [
+    -8.0,
+    39.0,
+    -10.0,
+    30.0
+  ],
+  "turns": [
+    {
+      "index": 1,
+      "phase": null,
+      "signal": null,
+      "summary": "6 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "C",
+              "x": 0,
+              "y": 0
+            }
+          },
+          "cmd": "C = (0, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "C",
+              "point",
+              "C = (0, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "B",
+              "x": 31,
+              "y": 0
+            }
+          },
+          "cmd": "B = (31, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "B",
+              "point",
+              "B = (31, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "A",
+              "x": 2,
+              "y": 20
+            }
+          },
+          "cmd": "A = (2, 20)",
+          "ok": true,
+          "diff": [
+            [
+              "A",
+              "point",
+              "A = (2, 20)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "N",
+              "x": 21,
+              "y": 20
+            }
+          },
+          "cmd": "N = (21, 20)",
+          "ok": true,
+          "diff": [
+            [
+              "N",
+              "point",
+              "N = (21, 20)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_polygon",
+            "args": {
+              "name": "trap",
+              "points": "A,N,B,C"
+            }
+          },
+          "cmd": "trap = Polygon(A, N, B, C)",
+          "ok": true,
+          "diff": [
+            [
+              "trap",
+              "quadrilateral",
+              "trap = 500"
+            ],
+            [
+              "a",
+              "segment",
+              "a = 19"
+            ],
+            [
+              "n",
+              "segment",
+              "n = 22.36"
+            ],
+            [
+              "b",
+              "segment",
+              "b = 31"
+            ],
+            [
+              "c",
+              "segment",
+              "c = 20.1"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "query_perimeter",
+            "args": {
+              "name": "p_trap",
+              "obj": "trap"
+            }
+          },
+          "cmd": "p_trap = Perimeter(trap)",
+          "ok": true,
+          "diff": [
+            [
+              "p_trap",
+              "numeric",
+              "p_trap = 92.4604"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "phase": null,
+      "signal": "answer_emit",
+      "summary": "0 ok",
+      "steps": []
+    }
+  ],
+  "answer": {
+    "value": "92.5",
+    "choice": "B"
+  }
+}

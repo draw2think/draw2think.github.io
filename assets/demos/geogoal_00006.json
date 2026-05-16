@@ -1,0 +1,913 @@
+{
+  "id": "geogoal_00006",
+  "meta": [
+    {
+      "label": "GeoGoal"
+    },
+    {
+      "label": "#00006"
+    },
+    {
+      "label": "14-turn · 1 reject + retry",
+      "tag": true
+    }
+  ],
+  "question": "As shown in the figure, point O and point A satisfy OA = 10. Point B is on the line through A perpendicular to AO (this line is tangent to the circle centered at O with radius OA at A). Let F be the centroid of triangle ABO, and let C, D, E be the midpoints of AO, BO, and BA, respectively. Let G be a point on the circle centered at F with radius FD. Let H be a point such that triangle GHB is right-angled at H. Find the following values: T0 = T = (ae/be)/(do/bd), T1 = T = angle(ao,de) in degrees (mod 180), T2 = T = (ac/co)/(ae/be), T3 = T = angle(bo,ce) in degrees (mod 180), T4 = T = angle(ce,de) - angle(do,co) in degrees (mod 180). Provide your answers as a list [T0, T1, T2, T3, T4] ().",
+  "choices": [],
+  "expected": null,
+  "input_image": "assets/demos/geogoal_00006_input.png",
+  "viewport": [
+    -10.0,
+    10.0,
+    -5.0,
+    15.0
+  ],
+  "turns": [
+    {
+      "index": 1,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "O",
+              "x": 0,
+              "y": 0
+            }
+          },
+          "cmd": "O = (0, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "O",
+              "point",
+              "O = (0, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "B",
+              "x": 4,
+              "y": 0
+            }
+          },
+          "cmd": "B = (4, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "B",
+              "point",
+              "B = (4, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "A",
+              "x": 0,
+              "y": 8
+            }
+          },
+          "cmd": "A = (0, 8)",
+          "ok": true,
+          "diff": [
+            [
+              "A",
+              "point",
+              "A = (0, 8)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_circle",
+            "args": {
+              "name": "circO",
+              "center": "O",
+              "point": "B"
+            }
+          },
+          "cmd": "circO = Circle(O, B)",
+          "ok": true,
+          "diff": [
+            [
+              "circO",
+              "circle",
+              "circO: x² + y² = 16"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "phase": null,
+      "signal": null,
+      "summary": "1 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_tangent",
+            "args": {
+              "name": "tA",
+              "point": "A",
+              "conic": "circO"
+            }
+          },
+          "cmd": "tA = Tangent(A, circO)",
+          "ok": true,
+          "diff": [
+            [
+              "tA_{1}",
+              "line",
+              "tA_{1}: 6x - 3.46y = -27.71"
+            ],
+            [
+              "tA_{2}",
+              "line",
+              "tA_{2}: 6x + 3.46y = 27.71"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "phase": null,
+      "signal": null,
+      "summary": "2 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "X",
+              "obj1": "tA_{1}",
+              "obj2": "circO"
+            }
+          },
+          "cmd": "X = Intersect(tA_{1}, circO)",
+          "ok": true,
+          "diff": [
+            [
+              "X",
+              "point",
+              "X = (-3.46, 2)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "Y",
+              "obj1": "tA_{2}",
+              "obj2": "circO"
+            }
+          },
+          "cmd": "Y = Intersect(tA_{2}, circO)",
+          "ok": true,
+          "diff": [
+            [
+              "Y",
+              "point",
+              "Y = (3.46, 2)"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "phase": null,
+      "signal": null,
+      "summary": "3 ok · 1 ✗",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_midpoint",
+            "args": {
+              "name": "C",
+              "p1": "Y",
+              "p2": "O"
+            }
+          },
+          "cmd": "C = Midpoint(Y, O)",
+          "ok": true,
+          "diff": [
+            [
+              "C",
+              "point",
+              "C = (1.73, 1)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_midpoint",
+            "args": {
+              "name": "D",
+              "p1": "A",
+              "p2": "O"
+            }
+          },
+          "cmd": "D = Midpoint(A, O)",
+          "ok": true,
+          "diff": [
+            [
+              "D",
+              "point",
+              "D = (0, 4)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_midpoint",
+            "args": {
+              "name": "E",
+              "p1": "A",
+              "p2": "Y"
+            }
+          },
+          "cmd": "E = Midpoint(A, Y)",
+          "ok": true,
+          "diff": [
+            [
+              "E",
+              "point",
+              "E = (1.73, 5)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_triangle_center",
+            "args": {
+              "name": "F",
+              "a": "A",
+              "b": "Y",
+              "c": "O",
+              "n": 2
+            }
+          },
+          "cmd": "F = TriangleCenter(A, Y, O, 2)",
+          "ok": false,
+          "diff": [],
+          "note": "javascript error: Class$S394: Discrete commands not loaded yet"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "lineOE",
+              "p1": "O",
+              "p2": "E"
+            }
+          },
+          "cmd": "lineOE = Line(O, E)",
+          "ok": true,
+          "diff": [
+            [
+              "lineOE",
+              "line",
+              "lineOE: -5x + 1.73y = 0"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "lineAC",
+              "p1": "A",
+              "p2": "C"
+            }
+          },
+          "cmd": "lineAC = Line(A, C)",
+          "ok": true,
+          "diff": [
+            [
+              "lineAC",
+              "line",
+              "lineAC: 7x + 1.73y = 13.86"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "F",
+              "obj1": "lineOE",
+              "obj2": "lineAC"
+            }
+          },
+          "cmd": "F = Intersect(lineOE, lineAC)",
+          "ok": true,
+          "diff": [
+            [
+              "F",
+              "point",
+              "F = (1.15, 3.33)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "transform_dilate",
+            "args": {
+              "name": "H",
+              "arg0": "D",
+              "arg1": 0.3333333333333333,
+              "arg2": "X"
+            }
+          },
+          "cmd": "H = Dilate(D, 0.3333333333333333, X)",
+          "ok": true,
+          "diff": [
+            [
+              "H",
+              "point",
+              "H = (-2.31, 2.67)"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "phase": null,
+      "signal": null,
+      "summary": "1 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "transform_dilate",
+            "args": {
+              "name": "I",
+              "arg0": "D",
+              "arg1": 0.666666666666666,
+              "arg2": "X"
+            }
+          },
+          "cmd": "I = Dilate(D, 0.666666666666666, X)",
+          "ok": true,
+          "diff": [
+            [
+              "I",
+              "point",
+              "I = (-1.15, 3.33)"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "ax",
+              "p1": "A",
+              "p2": "X"
+            }
+          },
+          "cmd": "ax = Line(A, X)",
+          "ok": true,
+          "diff": [
+            [
+              "ax",
+              "line",
+              "ax: 6x - 3.46y = -27.71"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "ox",
+              "p1": "O",
+              "p2": "X"
+            }
+          },
+          "cmd": "ox = Line(O, X)",
+          "ok": true,
+          "diff": [
+            [
+              "ox",
+              "line",
+              "ox: -2x - 3.46y = 0"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "ay",
+              "p1": "A",
+              "p2": "Y"
+            }
+          },
+          "cmd": "ay = Line(A, Y)",
+          "ok": true,
+          "diff": [
+            [
+              "ay",
+              "line",
+              "ay: 6x + 3.46y = 27.71"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "oy",
+              "p1": "O",
+              "p2": "Y"
+            }
+          },
+          "cmd": "oy = Line(O, Y)",
+          "ok": true,
+          "diff": [
+            [
+              "oy",
+              "line",
+              "oy: -2x + 3.46y = 0"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "ao",
+              "p1": "A",
+              "p2": "O"
+            }
+          },
+          "cmd": "ao = Line(A, O)",
+          "ok": true,
+          "diff": [
+            [
+              "ao",
+              "line",
+              "ao: x = 0"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "xo",
+              "p1": "X",
+              "p2": "O"
+            }
+          },
+          "cmd": "xo = Line(X, O)",
+          "ok": true,
+          "diff": [
+            [
+              "xo",
+              "line",
+              "xo: 2x + 3.46y = 0"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "xy",
+              "p1": "X",
+              "p2": "Y"
+            }
+          },
+          "cmd": "xy = Line(X, Y)",
+          "ok": true,
+          "diff": [
+            [
+              "xy",
+              "line",
+              "xy: y = 2"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "cd",
+              "p1": "C",
+              "p2": "D"
+            }
+          },
+          "cmd": "cd = Line(C, D)",
+          "ok": true,
+          "diff": [
+            [
+              "cd",
+              "line",
+              "cd: -3x - 1.73y = -6.93"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "de",
+              "p1": "D",
+              "p2": "E"
+            }
+          },
+          "cmd": "de = Line(D, E)",
+          "ok": true,
+          "diff": [
+            [
+              "de",
+              "line",
+              "de: -x + 1.73y = 6.93"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "dx",
+              "p1": "D",
+              "p2": "X"
+            }
+          },
+          "cmd": "dx = Line(D, X)",
+          "ok": true,
+          "diff": [
+            [
+              "dx",
+              "line",
+              "dx: 2x - 3.46y = -13.86"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "dy",
+              "p1": "D",
+              "p2": "Y"
+            }
+          },
+          "cmd": "dy = Line(D, Y)",
+          "ok": true,
+          "diff": [
+            [
+              "dy",
+              "line",
+              "dy: 2x + 3.46y = 13.86"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "df",
+              "p1": "D",
+              "p2": "F"
+            }
+          },
+          "cmd": "df = Line(D, F)",
+          "ok": true,
+          "diff": [
+            [
+              "df",
+              "line",
+              "df: 0.67x + 1.15y = 4.62"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "dh",
+              "p1": "D",
+              "p2": "H"
+            }
+          },
+          "cmd": "dh = Line(D, H)",
+          "ok": true,
+          "diff": [
+            [
+              "dh",
+              "line",
+              "dh: 1.33x - 2.31y = -9.24"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "ef",
+              "p1": "E",
+              "p2": "F"
+            }
+          },
+          "cmd": "ef = Line(E, F)",
+          "ok": true,
+          "diff": [
+            [
+              "ef",
+              "line",
+              "ef: 1.67x - 0.58y = 0"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "fo",
+              "p1": "F",
+              "p2": "O"
+            }
+          },
+          "cmd": "fo = Line(F, O)",
+          "ok": true,
+          "diff": [
+            [
+              "fo",
+              "line",
+              "fo: 3.33x - 1.15y = 0"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "fy",
+              "p1": "F",
+              "p2": "Y"
+            }
+          },
+          "cmd": "fy = Line(F, Y)",
+          "ok": true,
+          "diff": [
+            [
+              "fy",
+              "line",
+              "fy: 1.33x + 2.31y = 9.24"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "phase": null,
+      "signal": null,
+      "summary": "2 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "fh",
+              "p1": "F",
+              "p2": "H"
+            }
+          },
+          "cmd": "fh = Line(F, H)",
+          "ok": true,
+          "diff": [
+            [
+              "fh",
+              "line",
+              "fh: 0.67x - 3.46y = -10.78"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "eh",
+              "p1": "E",
+              "p2": "H"
+            }
+          },
+          "cmd": "eh = Line(E, H)",
+          "ok": true,
+          "diff": [
+            [
+              "eh",
+              "line",
+              "eh: 2.33x - 4.04y = -16.17"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "rename_object",
+            "args": {
+              "old": "lineOE→eo"
+            }
+          },
+          "cmd": "Rename(lineOE→eo)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "di",
+              "p1": "D",
+              "p2": "I"
+            }
+          },
+          "cmd": "di = Line(D, I)",
+          "ok": true,
+          "diff": [
+            [
+              "di",
+              "line",
+              "di: 0.67x - 1.15y = -4.62"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "ix",
+              "p1": "I",
+              "p2": "X"
+            }
+          },
+          "cmd": "ix = Line(I, X)",
+          "ok": true,
+          "diff": [
+            [
+              "ix",
+              "line",
+              "ix: 1.33x - 2.31y = -9.24"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "fe",
+              "p1": "F",
+              "p2": "E"
+            }
+          },
+          "cmd": "fe = Line(F, E)",
+          "ok": true,
+          "diff": [
+            [
+              "fe",
+              "line",
+              "fe: -1.67x + 0.58y = 0"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "phase": null,
+      "signal": null,
+      "summary": "1 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "fi",
+              "p1": "F",
+              "p2": "I"
+            }
+          },
+          "cmd": "fi = Line(F, I)",
+          "ok": true,
+          "diff": [
+            [
+              "fi",
+              "line",
+              "fi: y = 3.33"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "phase": null,
+      "signal": "done",
+      "summary": "0 ok",
+      "steps": []
+    }
+  ]
+}

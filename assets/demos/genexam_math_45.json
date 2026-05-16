@@ -1,0 +1,425 @@
+{
+  "id": "genexam_Math_45",
+  "meta": [
+    {
+      "label": "GenExam"
+    },
+    {
+      "label": "#Math_45"
+    },
+    {
+      "label": "analytic · integral area",
+      "tag": true
+    }
+  ],
+  "question": "Draw the region bounded by the curves y = x^2 and y = x^3, and shade the area between them for x in the interval [0, 1]. Clearly indicate the right intersection point.",
+  "choices": [],
+  "expected": null,
+  "input_image": null,
+  "viewport": [
+    -10.0,
+    10.0,
+    -10.0,
+    10.0
+  ],
+  "turns": [
+    {
+      "index": 1,
+      "phase": "construct",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_function",
+            "args": {
+              "cmd": "f(x) = x^2"
+            }
+          },
+          "cmd": "f(x) = x^2",
+          "ok": true,
+          "diff": [
+            [
+              "f",
+              "function",
+              "f(x) = x²"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_function",
+            "args": {
+              "cmd": "g(x) = x^3"
+            }
+          },
+          "cmd": "g(x) = x^3",
+          "ok": true,
+          "diff": [
+            [
+              "g",
+              "function",
+              "g(x) = x³"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "O",
+              "x": 0,
+              "y": 0
+            }
+          },
+          "cmd": "O = (0, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "O",
+              "point",
+              "O = (0, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "A",
+              "x": 1,
+              "y": 1
+            }
+          },
+          "cmd": "A = (1, 1)",
+          "ok": true,
+          "diff": [
+            [
+              "A",
+              "point",
+              "A = (1, 1)"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "phase": "construct",
+      "signal": null,
+      "summary": "2 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_integral_shade",
+            "args": {
+              "name": "area",
+              "arg0": "f",
+              "arg1": "g",
+              "arg2": 0,
+              "arg3": 1
+            }
+          },
+          "cmd": "area = IntegralBetween(f, g, 0, 1)",
+          "ok": true,
+          "diff": [
+            [
+              "area",
+              "numeric",
+              "area = 0.08"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_text",
+            "args": {
+              "name": "label_A",
+              "arg0": "(1, 1)",
+              "arg1": "(1.1, 1.1)",
+              "arg2": "false",
+              "arg3": "false"
+            }
+          },
+          "cmd": "label_A = Text(\"(1, 1)\", (1.1, 1.1), false, false)",
+          "ok": true,
+          "diff": [
+            [
+              "label_A",
+              "text",
+              "(1, 1)"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "phase": "construct",
+      "signal": null,
+      "summary": "1 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "set_label_visible",
+            "args": {
+              "name": "A",
+              "visible": "True"
+            }
+          },
+          "cmd": "SetLabelVisible(A, True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "phase": "construct",
+      "signal": "construct_done",
+      "summary": "0 ok",
+      "steps": []
+    },
+    {
+      "index": 5,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_coord_system",
+            "args": {
+              "x_min": -0.5,
+              "x_max": 1.5,
+              "y_min": -0.5,
+              "y_max": 1.5
+            }
+          },
+          "cmd": "SetCoordSystem(-0.5, 1.5, -0.5, 1.5)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_show_axes",
+            "args": {
+              "visible": "True"
+            }
+          },
+          "cmd": "ShowAxes(True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_show_grid",
+            "args": {
+              "visible": "True"
+            }
+          },
+          "cmd": "ShowGrid(True)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "f",
+              "color": "Blue"
+            }
+          },
+          "cmd": "SetColor(f, \"Blue\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "g",
+              "color": "Red"
+            }
+          },
+          "cmd": "SetColor(g, \"Red\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "area",
+              "color": "Purple"
+            }
+          },
+          "cmd": "SetColor(area, \"Purple\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_filling",
+            "args": {
+              "obj": "area",
+              "opacity": 0.3
+            }
+          },
+          "cmd": "SetFilling(area, 0.3)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_line_thickness",
+            "args": {
+              "obj": "f",
+              "thickness": 6
+            }
+          },
+          "cmd": "SetLineThickness(f, 6)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "phase": "render",
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_line_thickness",
+            "args": {
+              "obj": "g",
+              "thickness": 6
+            }
+          },
+          "cmd": "SetLineThickness(g, 6)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_caption",
+            "args": {
+              "obj": "f",
+              "caption": "y = x^2"
+            }
+          },
+          "cmd": "SetCaption(f, \"y = x^2\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_caption",
+            "args": {
+              "obj": "g",
+              "caption": "y = x^3"
+            }
+          },
+          "cmd": "SetCaption(g, \"y = x^3\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_label_mode",
+            "args": {
+              "obj": "f",
+              "mode": 3
+            }
+          },
+          "cmd": "SetLabelMode(f, 3)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "phase": "render",
+      "signal": null,
+      "summary": "3 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "render_set_label_mode",
+            "args": {
+              "obj": "g",
+              "mode": 3
+            }
+          },
+          "cmd": "SetLabelMode(g, 3)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_point_size",
+            "args": {
+              "obj": "A",
+              "size": 7
+            }
+          },
+          "cmd": "SetPointSize(A, 7)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "render_set_color",
+            "args": {
+              "obj": "A",
+              "color": "Black"
+            }
+          },
+          "cmd": "SetColor(A, \"Black\")",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "phase": "render",
+      "signal": "render_done",
+      "summary": "0 ok",
+      "steps": []
+    }
+  ]
+}

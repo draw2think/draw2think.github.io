@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Draw2Think: Harnessing Geometry Reasoning through Constraint Engine Interaction</title>
+  <meta name="description" content="Draw2Think recasts geometric reasoning as agentic interaction with the GeoGebra constraint engine: a frozen VLM proposes typed actions, the engine verifies each one, and the canvas becomes a checkable intermediate state.">
+  <meta property="og:title" content="Draw2Think: Harnessing Geometry Reasoning through Constraint Engine Interaction">
+  <meta property="og:description" content="A training-free constraint-agentic harness wrapping a frozen VLM around a dynamic-geometry engine. Each action is engine-verified; the canvas is a checkable intermediate state.">
+  <meta property="og:image" content="assets/fig1_overview.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans:wght@500;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://www.geogebra.org/apps/deployggb.js" defer></script>
+</head>
+<body>
+<!-- Synchronous anti-flash: if the URL already has the focus hash
+     (e.g. when arriving from an arXiv figure's href), tag body with
+     the focus class BEFORE the rest of the document parses. That
+     way the existing body.focus-paradigms CSS hides the hero / TL;DR
+     / other sections from the very first paint, so the reader never
+     sees a flash of the full page before the focus view settles. -->
+<script>
+  if (location.hash === '#focus=paradigms') {
+    document.body.classList.add('focus-paradigms');
+  }
+</script>
+
+<!-- ─── STICKY TOP NAV ─────────────────────────────────────────── -->
+<nav class="topnav" aria-label="Page sections">
+  <div class="container topnav-row">
+    <a href="#top" class="brand">Draw2Think</a>
+    <div class="topnav-links">
+      <a href="#top" class="topnav-top" aria-label="Back to top">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="5" x2="19" y2="5"/>
+          <polyline points="7 13 12 8 17 13"/>
+          <line x1="12" y1="9" x2="12" y2="20"/>
+        </svg>
+        <span class="topnav-top-label">Top</span>
+      </a>
+      <a href="#overview">Overview</a>
+      <a href="#method">Loop</a>
+      <a href="#demo">Walk-through</a>
+      <a href="#insights">Insights</a>
+      <a href="#mechanisms">Mechanisms</a>
+      <a href="#future">Future</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────────────────── -->
+<header class="hero" id="top">
+  <div class="container narrow">
+    <h1 class="title">
+      Draw2Think:<br>
+      <span class="subtitle">Harnessing Geometry Reasoning through Constraint Engine Interaction</span>
+    </h1>
+
+    <div class="authors">
+      <span class="author"><a href="https://chengdobbs.github.io">Juncheng Hu</a><sup>1,2,3</sup></span>
+      <span class="author"><a href="https://scholar.google.com/citations?user=WrJKEzEAAAAJ">Jiawei Du</a><sup>2,3</sup></span>
+      <span class="author"><a href="https://zhangxin-xd.github.io/">Xin Zhang</a><sup>2,3</sup></span>
+      <span class="author"><a href="https://joeyzhouty.github.io/">Joey Tianyi Zhou</a><sup>2,3</sup></span>
+    </div>
+    <div class="affiliations">
+      <span><sup>1</sup>National University of Singapore</span>
+      <span><sup>2</sup>Centre for Frontier AI Research, A*STAR</span>
+      <span><sup>3</sup>Institute of High Performance Computing, A*STAR</span>
+    </div>
+    <div class="contact">
+      <code>juncheng.hu@u.nus.edu</code>
+      &nbsp;&middot;&nbsp;
+      <code>{dujw, zhangx7, Joey_Zhou}@a-star.edu.sg</code>
+    </div>
+
+    <nav class="buttons">
+      <a class="btn" href="#" data-link="paper" aria-label="Paper PDF">
+        <span class="paper-icon" aria-hidden="true">
+          <i class="far fa-file"></i>
+          <span class="paper-icon-badge">PDF</span>
+        </span>
+        Paper
+      </a>
+      <a class="btn" href="#" data-link="arxiv" aria-label="arXiv preprint">
+        <i class="ai ai-arxiv" aria-hidden="true"></i>
+        arXiv
+      </a>
+      <a class="btn" href="https://github.com/ChengDobbs/harness-geometry" aria-label="Source code on GitHub">
+        <i class="fab fa-github" aria-hidden="true"></i>
+        Code
+      </a>
+      <a class="btn" href="#" data-link="slides" aria-label="Presentation slides">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 3h20"/>
+          <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/>
+          <path d="M8 21l4-4 4 4"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+        Slides
+      </a>
+      <a class="btn" href="#" data-link="poster" aria-label="Poster">
+        <i class="fas fa-image" aria-hidden="true"></i>
+        Poster
+      </a>
+      <a class="btn" href="#" data-link="video" aria-label="Project video">
+        <i class="fas fa-play-circle" aria-hidden="true"></i>
+        Video
+      </a>
+    </nav>
+
+    <!-- Hero asset: canvas demo video/GIF. PLACEHOLDER — commented out
+         until the final asset + caption are recorded. Uncomment and
+         drop the real mp4/gif into assets/ to restore.
+    <figure class="hero-media">
+      <video class="hero-video" autoplay loop muted playsinline poster="assets/fig1_overview.png">
+        <source src="assets/demo_canvas.mp4" type="video/mp4">
+        <img src="assets/demo_canvas.gif" alt="Draw2Think: GeoGebra canvas evolving through engine-verified actions">
+      </video>
+      <figcaption>
+        A frozen VLM proposes typed ToolSpecs; the GeoGebra engine accepts or rejects each one;
+        the canvas accumulates as a checkable intermediate state.
+      </figcaption>
+    </figure>
+    -->
+
+  </div>
+</header>
+
+<!-- ─── TL;DR ────────────────────────────────────────────────────── -->
+<section class="band tldr">
+  <div class="container narrow">
+    <h2 class="band-title">TL;DR</h2>
+    <ul class="tldr-list">
+      <li>
+        <strong>Geometry needs checkable state.</strong>
+        Text traces, rendered sketches, and generated scripts can expose intermediate
+        work while leaving construction-time validity outside the loop.
+        Draw2Think makes the canvas itself the working memory.
+      </li>
+      <li>
+        <strong>The engine verifies during construction.</strong>
+        A frozen VLM proposes typed ToolSpecs; GeoGebra executes or rejects them;
+        exact observations return before the model commits to the next step.
+      </li>
+      <li>
+        <strong>The lesson is selective grounding.</strong>
+        External engines help most when construction, measurement, or state tracking
+        is the bottleneck. When the internal route is already cheap, forcing a canvas
+        can become overhead; that boundary is part of the finding.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ─── OVERVIEW ────────────────────────────────────────────────── -->
+<section class="band" id="overview">
+  <div class="container">
+    <h2>Overview: Four Paradigms for Externalizing Geometry Reasoning</h2>
+    <!-- Focus button: SIBLING of .paradigms inside .container so it
+         participates in NO grid layout. Anchored to .container's
+         top-right corner via absolute positioning (see CSS). Toggles
+         URL hash `#focus=paradigms`. -->
+    <button class="paradigms-zoom-btn" type="button" aria-label="Focus on the four paradigms (fullscreen view)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="15 3 21 3 21 9"/>
+        <polyline points="9 21 3 21 3 15"/>
+        <line x1="21" y1="3" x2="14" y2="10"/>
+        <line x1="3" y1="21" x2="10" y2="14"/>
+      </svg>
+      <span>Focus</span>
+    </button>
+    <div class="paradigms">
+      <!-- Col 1: Visual Artifacts -->
+      <article class="paradigm" data-flavor="visual" tabindex="0">
+        <header class="paradigm-head">
+          <span class="paradigm-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="14" rx="2"/>
+              <path d="M3 16l5-4 4 3 5-5 4 4"/>
+            </svg>
+          </span>
+          <h3>Visual Artifacts</h3>
+        </header>
+        <!-- Encapsulated in Shadow DOM (defined in assets/js/visual-flow.js).
+             Hover triggers a multi-wave clarification animation on the
+             rendered bitmap, with two orbital flow streaks circling its
+             border + an L-return on the LEFT back to the prompt. -->
+        <visual-flow class="paradigm-flow"></visual-flow>
+        <div class="paradigm-badge">Perceptual feedback<span class="paradigm-badge-sub">rendered image / bitmap</span></div>
+        <p class="paradigm-caveat">
+          <span class="caveat-emoji caveat-emoji-anim emoji-cry" role="img" aria-label="cry"></span>
+          pixel approximation;  <br/> no engine-exact certificate.
+        </p>
+      </article>
+
+      <!-- Col 2: Textual Traces -->
+      <article class="paradigm" data-flavor="text" tabindex="0">
+        <header class="paradigm-head">
+          <span class="paradigm-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <line x1="8" y1="9"  x2="16" y2="9"/>
+              <line x1="8" y1="13" x2="14" y2="13"/>
+            </svg>
+          </span>
+          <h3>Textual Traces</h3>
+        </header>
+        <!-- Encapsulated in Shadow DOM (defined in assets/js/textual-flow.js).
+             Each of the 4 reasoning traces lives in its own block with a
+             dashed self-reflect curve on the right; hover streams a flow
+             streak through all 5 arrows in sequence. -->
+        <textual-flow class="paradigm-flow"></textual-flow>
+        <div class="paradigm-badge">Internal self-check<span class="paradigm-badge-sub">reasoning trace in text</span></div>
+        <p class="paradigm-caveat">
+          <span class="caveat-emoji caveat-emoji-anim emoji-cry" role="img" aria-label="cry"></span>
+          intermediate text lacks <br/> exact validation
+        </p>
+      </article>
+
+      <!-- Col 3: Executable Scripts -->
+      <article class="paradigm" data-flavor="code" tabindex="0">
+        <header class="paradigm-head">
+          <span class="paradigm-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </span>
+          <h3>Executable Scripts</h3>
+        </header>
+        <div class="paradigm-flow">
+          <!-- Top 5 code tiles with title + simultaneous char-by-char
+               streaming, triggered when the col-3 flow reaches the
+               Code/script block (web component, see code-tiles.js). -->
+          <code-tiles></code-tiles>
+          <!-- 4-block horizontal code pipeline (web component, see
+               assets/js/code-flow.js). Renders: VLM/agent → Code/script →
+               Execute/render ⇢ Post-hoc check, with two dashed feedback
+               arcs swinging back from Execute and Post-hoc into VLM. -->
+          <code-flow></code-flow>
+        </div>
+        <div class="paradigm-badge">Post-hoc verification<span class="paradigm-badge-sub">code / configuration / scripts</span></div>
+        <p class="paradigm-caveat">
+          <span class="caveat-emoji caveat-emoji-anim emoji-cry" role="img" aria-label="cry"></span>
+          geometry checked after generation;  <br/>
+          no per-action engine feedback
+        </p>
+      </article>
+
+      <!-- Col 4: Constraint-Agentic Harness (Draw2Think) -->
+      <article class="paradigm paradigm-ours" data-flavor="ours" tabindex="0">
+        <header class="paradigm-head">
+          <h3>Constraint-Agentic Harness <span class="paradigm-star" aria-hidden="true">&#9733;</span></h3>
+          <span class="paradigm-mine">Draw2Think <span class="paradigm-mine-tag">(ours)</span></span>
+        </header>
+        <!-- Encapsulated in Shadow DOM (defined in assets/demo.js) so
+             extensions can't leak CSS into the diagram. Styles live in
+             the shadow tree; the host element is just <d2t-diagram>. -->
+        <d2t-diagram class="paradigm-flow"></d2t-diagram>
+        <div class="paradigm-badge paradigm-badge-ours"><span class="caveat-emoji caveat-emoji-anim emoji-grin" role="img" aria-label="grin"></span>Typed actions &middot; Exact verdicts &middot; Reusable canvas</div>
+      </article>
+
+    </div>
+
+    <p class="lead">
+      Prior routes externalize intermediate geometry as <em>visual artifacts</em>,
+      <em>textual traces</em>, or <em>executable scripts</em> &mdash; each surfaces a
+      state while leaving geometric validity uncertified during construction.
+      <strong>Draw2Think</strong> adds a fourth route: a <em>constraint-agentic
+      harness</em> where a frozen VLM selects typed ToolSpecs, the GeoGebra engine
+      updates an engine-valid canvas state, and structured observations return
+      after each action. The distinction is less about externalizing state than
+      about <em>when verification enters the loop</em>.
+    </p>
+  </div>
+</section>
+
+<!-- ─── METHOD ─────────────────────────────────────────────────── -->
+<section class="band alt" id="method">
+  <div class="container narrow">
+    <h2>The Propose-Draw-Verify Loop</h2>
+    <p>
+      Draw2Think wraps a frozen VLM around a dynamic-geometry engine via typed
+      ToolSpecs. In dynamic geometry systems such as GeoGebra, construction commands
+      enforce geometric relationships <em>algebraically</em> rather than by coordinate
+      approximation. Each accepted action is therefore engine-checkable; trajectory-level
+      strategy stays with the model.
+    </p>
+
+    <ol class="loop">
+      <li>
+        <span class="loop-tag">Propose</span>
+        The VLM reads problem + current canvas snapshot and emits a typed ToolSpec call
+        (e.g., <code>line_through_perpendicular</code>, <code>circle_through_center</code>).
+      </li>
+      <li>
+        <span class="loop-tag">Draw</span>
+        GeoGebra executes the call algebraically. Invalid or degenerate configurations
+        surface as engine errors rather than silent approximations.
+      </li>
+      <li>
+        <span class="loop-tag">Verify</span>
+        Structured observations &mdash; exact lengths, angles, intersections, error
+        messages &mdash; return to the model and ground the next step.
+      </li>
+    </ol>
+
+    <p class="caption-note">
+      Two properties become separately auditable:
+      <strong>Construction Fidelity</strong> (model-level: did the canvas realize
+      the intended configuration?) and
+      <strong>Measurement Faithfulness</strong> (engine-level: are exact values and
+      relations preserved by canvas constraints?).
+    </p>
+  </div>
+</section>
+
+<!-- ─── LIVE DEMO ─────────────────────────────────────────────── -->
+<section class="band" id="demo">
+  <div class="container">
+    <h2>Live walk-through</h2>
+    <p class="lead">
+      Real Draw2Think trajectories across four datasets. Pick a problem below &mdash;
+      <strong>hover or click any <em>Engine command</em> step</strong>; the
+      model response (left), engine output (right), and live canvas (below) all
+      snap to that step in lock-step. For multi-turn problems, the turn tabs at
+      the top of the command column scroll the active turn into view.
+    </p>
+
+    <div class="demo-card" data-demo="geometry3k_2103">
+      <header class="demo-banner">
+        <div class="demo-banner-text">
+          <!-- Bench / problem selector: pills sit IN the banner where
+               the meta pills used to live. Each button is one demo;
+               clicking re-fetches assets/demos/<demo-id>.json + re-renders. -->
+          <div class="demo-selector" id="demo-selector" role="tablist" aria-label="Choose demo problem">
+            <button type="button" data-demo-id="geometry3k_2103" class="active">
+              <span class="pill-bench">Geo3K</span>
+              <span class="pill-id">#2103</span>
+              <span class="pill-tag">trapezoid</span>
+            </button>
+            <button type="button" data-demo-id="pgps9k_152">
+              <span class="pill-bench">PGPS9K</span>
+              <span class="pill-id">#152</span>
+              <span class="pill-tag">3-turn retry</span>
+            </button>
+            <button type="button" data-demo-id="geogoal_00006">
+              <span class="pill-bench">GeoGoal</span>
+              <span class="pill-id">#00006</span>
+              <span class="pill-tag">14-turn retry</span>
+            </button>
+            <button type="button" data-demo-id="genexam_math_100">
+              <span class="pill-bench">GenExam</span>
+              <span class="pill-id">Math_100</span>
+              <span class="pill-tag">chord</span>
+            </button>
+            <button type="button" data-demo-id="genexam_math_45">
+              <span class="pill-bench">GenExam</span>
+              <span class="pill-id">Math_45</span>
+              <span class="pill-tag">integral</span>
+            </button>
+          </div>
+          <!-- Old data-driven meta pills removed — the selector above
+               already encodes bench + id + tag (and CSS `display:flex`
+               on .demo-meta was overriding the HTML `hidden` attr,
+               keeping them visible despite being marked hidden). -->
+          <h3 class="demo-question" id="demo-question"></h3>
+          <div class="demo-choices" id="demo-choices"></div>
+        </div>
+        <figure class="demo-banner-image" id="demo-input-image">
+          <!-- Filled by JS if data.input_image is present -->
+        </figure>
+      </header>
+
+      <div class="demo-grid">
+        <!-- Col 1: raw model response (function-call JSON) -->
+        <div class="demo-col col-raw">
+          <div class="col-head">Model response (function call)</div>
+          <pre class="raw-json" id="raw-json" aria-live="polite"></pre>
+        </div>
+
+        <!-- Col 2: tool calls (engine command). The turn-tabs strip is
+             horizontally scrollable; demo.js auto-scrolls the active
+             turn into view (matters for the 30-turn GeoGoal demo). -->
+        <div class="demo-col col-tools">
+          <div class="col-head">Engine command (Model &rarr; Engine Harness)</div>
+          <div class="turn-tabs-wrap" id="turn-tabs-wrap">
+            <div class="turn-tabs" id="turn-tabs" role="tablist" aria-label="Turn"></div>
+          </div>
+          <ol class="tool-list" id="tool-list"></ol>
+        </div>
+
+        <!-- Col 3: engine diff -->
+        <div class="demo-col col-engine">
+          <div class="col-head">Engine output (new objects)</div>
+          <pre class="engine-diff" id="engine-diff" aria-live="polite"></pre>
+        </div>
+
+        <!-- Col 4: GeoGebra canvas -->
+        <div class="demo-col col-canvas">
+          <div class="col-head">GeoGebra canvas (live)</div>
+          <div class="canvas-wrap">
+            <div id="ggb-applet">
+              <div class="canvas-fallback">
+                Canvas loads from <code>geogebra.org</code>. Needs internet on first paint.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── INSIGHTS ──────────────────────────────────────────────── -->
+<section class="band" id="insights">
+  <div class="container">
+    <h2>Insights from the Harness</h2>
+    <p class="lead">
+      Constraint interaction changes <em>where</em> uncertainty is allowed to live:
+      the model can still explore strategy, but accepted canvas state is no longer
+      just a latent guess.
+    </p>
+
+    <div class="insight-grid">
+      <article class="insight-card">
+        <span class="insight-kicker">Verification timing</span>
+        <h3>Verification timing matters as much as externalization.</h3>
+        <p>
+          Visual sketches, text traces, and generated scripts all expose intermediate
+          objects. Draw2Think moves the verification point earlier: each accepted
+          action becomes a checked premise for the next action.
+        </p>
+      </article>
+
+      <article class="insight-card">
+        <span class="insight-kicker">Selective grounding</span>
+        <h3>External tools help when they remove the active bottleneck.</h3>
+        <p>
+          The loop is most valuable when the model needs exact measurements,
+          constraint-consistent construction, or a stable state to inspect. On easy
+          or memorized routes, building the canvas can be extra work rather than help.
+        </p>
+      </article>
+
+      <article class="insight-card">
+        <span class="insight-kicker">Auditable state</span>
+        <h3>Outcome accuracy hides too many failure modes.</h3>
+        <p>
+          A final answer cannot tell whether perception, construction, measurement,
+          or algebra failed. A canvas audit lets us ask whether the intermediate
+          geometry itself was realized, independently of the final response.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MECHANISMS ────────────────────────────────────────────── -->
+<section class="band alt" id="mechanisms">
+  <div class="container narrow">
+    <h2>Mechanisms Worth Taking Away</h2>
+    <p class="lead">
+      Draw2Think is useful as a geometry system, but the broader design lesson is
+      about how to wrap a generative model with a deterministic substrate without
+      moving strategy selection out of the policy layer.
+    </p>
+
+    <div class="mechanism-list">
+      <article class="mechanism-item">
+        <h3>Readout is part of reasoning.</h3>
+        <p>
+          Query tools turn exact engine state into answerable evidence. When that channel is
+          removed, the model falls back to internal reasoning or indirect construction
+          side effects.
+        </p>
+      </article>
+
+      <article class="mechanism-item">
+        <h3>ToolSpec wording changes trajectories.</h3>
+        <p>
+          The interface is a behavioral surface. Small descriptions can move effort
+          between latent simulation and engine-facing action, because the model is
+          choosing among typed operations rather than emitting arbitrary pixels.
+        </p>
+      </article>
+
+      <article class="mechanism-item">
+        <h3>Per-action verification leaves strategy open.</h3>
+        <p>
+          GeoGebra can reject invalid constructions and return exact observations,
+          but it does not decide which auxiliary object to introduce or when a diagram
+          is sufficient. The remaining failures point to policy-level planning.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FUTURE DIRECTIONS ─────────────────────────────────────── -->
+<section class="band" id="future">
+  <div class="container">
+    <h2>Future Directions</h2>
+    <p class="lead">
+      The next step is to treat Draw2Think as a route toward verifiable process,
+      with final-answer gains as one outcome rather than the sole objective. The same interface ideas suggest stronger
+      planning signals, broader executable substrates, and reusable process data.
+    </p>
+
+    <div class="future-grid">
+      <article class="future-card">
+        <span class="future-kicker">Strategy-level checks</span>
+        <h3>Expose more than the rendered canvas.</h3>
+        <p>
+          Future harnesses can return dependency graphs, unresolved constraints, and
+          symbolic query opportunities so the model can reason about the construction
+          plan, not only the visible objects.
+        </p>
+      </article>
+
+      <article class="future-card">
+        <span class="future-kicker">Proximal twins</span>
+        <h3>Generalize the idea beyond geometry.</h3>
+        <p>
+          Geometry is a clean testbed because the engine can reject invalid actions
+          and expose local state. The same pattern may apply wherever a task has an
+          executable surrogate that is cheaper and more reliable than latent checking.
+        </p>
+      </article>
+
+      <article class="future-card">
+        <span class="future-kicker">Reusable trajectories</span>
+        <h3>Treat process records as data.</h3>
+        <p>
+          A Draw2Think trajectory contains typed dependencies, engine verdicts, and
+          concrete canvas effects. That makes it a richer supervision object than a
+          final answer or a free-form explanation.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BIBTEX ─────────────────────────────────────────────────── -->
+<section class="band alt" id="bibtex">
+  <div class="container narrow">
+    <h2>Citation</h2>
+    <p>If Draw2Think <small>(or the live demos on this project page)</small> is useful for your research, please cite:</p>
+    <div class="bibtex-block">
+      <pre class="bibtex"><code>@misc{hu2026draw2think,
+  title  = {Draw2Think: Harnessing Geometry Reasoning through Constraint Engine Interaction},
+  author = {Hu, Juncheng and Du, Jiawei and Zhang, Xin and Zhou, Joey Tianyi},
+  year   = {2026},
+  url    = {https://draw2think.github.io}
+}</code></pre>
+      <button class="copy-btn" data-copy="bibtex" type="button" aria-label="Copy BibTeX to clipboard" title="Copy BibTeX">
+        <i class="far fa-clipboard copy-icon" aria-hidden="true"></i>
+        <i class="fas fa-check copy-icon-done" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container narrow">
+    <p>
+      <strong>Acknowledgements.</strong>
+      We thank, in particular, the following projects / products:
+      <br>
+      &middot; <a href="https://github.com/geogebra">GeoGebra</a> &mdash; the public dynamic-geometry construction kernel (<a href="https://www.geogebra.org/calculator">try the web calculator</a>);
+      <br>
+      &middot; <a href="https://deepmind.google/models/gemini/flash/">Gemini 3 Flash</a> &mdash; the backbone used in our main experiments;
+      <br>
+      &middot; <a href="https://github.com/Newclid/Newclid">Newclid</a> &mdash; the predicate-level verifier underpinning our construction-fidelity audit;
+      <br>
+      &middot; <a href="https://github.com/OpenGVLab/GenExam">GenExam</a> &mdash; the rendering benchmark and evaluation protocol;
+      <br>
+      &middot; <a href="https://limit-of-rlvr.github.io/">Limit-of-RLVR</a> &mdash; our webpage design reference.
+    </p>
+    <p class="meta">
+      &copy; 2026 The Draw2Think authors.
+    </p>
+  </div>
+</footer>
+
+<!-- Exit-focus button: shown only when body.focus-paradigms is set.
+     Fixed top-right under the sticky topnav. ESC also exits. -->
+<button class="focus-exit" type="button" aria-label="Exit focus view (or press ESC)" title="Exit focus (ESC)">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <line x1="18" y1="6" x2="6" y2="18"/>
+    <line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+</button>
+
+<!-- Split out by concern:
+     paradigm-flow = <d2t-diagram> (col 4 Constraint-Agentic Harness)
+     visual-flow   = <visual-flow> (col 1 Visual Artifacts hover anim)
+     demo          = GeoGebra live trajectory
+     site          = nav highlight + BibTeX copy + paradigms focus mode.
+     All independent + defer-loaded; order doesn't matter. -->
+<script src="assets/js/paradigm-flow.js" defer></script>
+<script src="assets/js/visual-flow.js" defer></script>
+<script src="assets/js/textual-flow.js" defer></script>
+<script src="assets/js/code-flow.js" defer></script>
+<script src="assets/js/code-tiles.js" defer></script>
+<script src="assets/js/demo.js" defer></script>
+<script src="assets/js/site.js" defer></script>
+
+</body>
+</html>
