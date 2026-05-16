@@ -966,15 +966,14 @@ code, pre {
   padding-right: 18px;
 }
 .canvas-wrap {
-  /* Aspect ratio chosen so the GRAPHICS area inside (the right ~61.5%
-     of the applet width, since the algebra panel takes the left
-     ~38.5% in 'classic' mode) is a true square. The old fixed
-     `height: 480px` compressed the drawing area into a wide rectangle
-     whenever the wrap got wider than ~780px.
-     ratio: wrap_width : wrap_height = 1 : 0.615 ≈ 13 : 8. */
+  /* Aspect ratio chosen so the GRAPHICS area inside is a true square.
+     Empirically (measured 482×503 with 13/8 ratio), the algebra panel
+     takes ~41% of the applet width in this build, so graphics is the
+     right ~59% — that ratio drives the wrap aspect:
+       wrap_width / wrap_height = 1 / 0.590 ≈ 17 / 10. */
   width: 100%;
-  max-width: 820px;
-  aspect-ratio: 13 / 8;
+  max-width: 860px;
+  aspect-ratio: 17 / 10;
   margin: 8px auto 0;
   background: var(--bg-alt);
   border-radius: 6px;

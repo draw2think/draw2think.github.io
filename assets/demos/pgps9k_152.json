@@ -34,10 +34,10 @@
   "expected": "C",
   "input_image": "assets/demos/pgps9k_152_input.png",
   "viewport": [
-    -3.0,
-    10.0,
-    8.0,
-    26.0
+    -15,
+    15,
+    -3,
+    27
   ],
   "turns": [
     {

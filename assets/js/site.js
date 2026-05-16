@@ -109,9 +109,8 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
     if (!want && have) {
       requestAnimationFrame(() => {
         const newHash = location.hash;
-        // Hash points to another section (e.g. #demo, #method): honor
-        // it and scroll to that element. Otherwise restore the
-        // reader's pre-focus position.
+        // Topnav-anchor exit (e.g. clicked #demo): scroll to that
+        // section so the click lands where the user pointed.
         if (newHash && newHash !== HASH && newHash.length > 1) {
           const el = document.getElementById(newHash.slice(1));
           if (el) {
@@ -119,7 +118,17 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
             return;
           }
         }
-        window.scrollTo(0, savedScroll);
+        // Default exit (× / ESC): land at #overview position so the
+        // reader sees the four paradigm cards in their natural place.
+        // URL stays clean (no hash) — pushState was already done by
+        // exit() — but the scroll mimics anchor navigation. Feels
+        // like "refresh + scroll-into-place" without the actual reload.
+        const overview = document.getElementById('overview');
+        if (overview) {
+          overview.scrollIntoView({ block: 'start', behavior: 'auto' });
+        } else {
+          window.scrollTo(0, savedScroll);
+        }
       });
     }
   }

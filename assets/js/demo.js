@@ -321,8 +321,24 @@
       if (isAnswerTurn) list.appendChild(renderAnswerCard());
     }
     bindStepListeners();
+    // Force-interrupt any in-flight smooth-scroll animation left over
+    // from the previous demo's autoplay. Without this, switching demos
+    // while the previous list was mid-scroll lets the old animation
+    // finish on the new content — landing the new step 0's list near
+    // the bottom (where the old demo had scrolled to). Setting
+    // scrollTop directly is the standardized way to cancel a smooth
+    // scroll. `scrollTo({behavior: 'instant'})` is also valid but less
+    // portable across older browsers.
+    list.scrollTop = 0;
   }
 
+  // Track real mouse movement so we can distinguish "user moved the
+  // cursor onto a step" from "autoplay scrolled a step under the
+  // stationary cursor, firing a spurious mouseenter".
+  let lastMouseMove = 0;
+  if (list) {
+    list.addEventListener('mousemove', () => { lastMouseMove = Date.now(); });
+  }
   function bindStepListeners() {
     list.querySelectorAll('.tool-step[data-step]').forEach(el => {
       const idx = parseInt(el.dataset.step, 10);
@@ -340,7 +356,15 @@
           });
         }
       };
-      el.addEventListener('mouseenter', () => { stopAutoplay(); cancelResume(); hover(idx); manualReveal(); });
+      el.addEventListener('mouseenter', () => {
+        // Only honor mouseenter if a real mousemove happened within
+        // the last 120ms. Otherwise it was the autoplay's smooth
+        // scroll moving the row under a stationary cursor (DOM-shift
+        // mouseenter), which would otherwise race with autoplay and
+        // make the active step jitter between targets.
+        if (Date.now() - lastMouseMove > 120) return;
+        stopAutoplay(); cancelResume(); hover(idx); manualReveal();
+      });
       el.addEventListener('focus',      () => { stopAutoplay(); cancelResume(); showStep(idx); manualReveal(); });
       el.addEventListener('click',      () => { stopAutoplay(); cancelResume(); showStep(idx); manualReveal(); });
     });
@@ -423,7 +447,7 @@
   }
 
   // ─── Step display (active highlight + columns + canvas replay) ──
-  function showStep(globalIdx) {
+  function showStep(globalIdx, fromAutoplay) {
     if (globalIdx < 0 || globalIdx >= allSteps.length) return;
     activeGlobalIdx = globalIdx;
     const meta = allSteps[globalIdx];
@@ -435,19 +459,26 @@
       el.classList.toggle('active', i === globalIdx);
       el.classList.toggle('visited', i <= globalIdx);
     });
-    // Center the active step WITHIN the .tool-list scroll container
-    // (not within the page viewport — scrollIntoView would propagate
-    // and scroll the outer page too). Manual scrollTop math keeps the
-    // page steady; only the step list moves.
+    // Center the active step VERTICALLY within .tool-list, using
+    // getBoundingClientRect for the active row's position relative to
+    // the list's CURRENT scroll origin. `offsetTop` is unreliable
+    // here because the list isn't `position: relative` — its
+    // offsetParent climbs out to .demo-card, so `activeEl.offsetTop`
+    // can include hundreds of px of banner/header height above the
+    // list, and the centering math produces a target that clamps to
+    // max → looks like a one-step jump to the bottom.
     const activeEl = list.querySelector('.tool-step.active');
     if (activeEl) {
+      const listRect   = list.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+      const aTopInList = (activeRect.top - listRect.top) + list.scrollTop;
       const listH = list.clientHeight;
-      const target = activeEl.offsetTop - (listH - activeEl.offsetHeight) / 2;
+      const target = aTopInList - (listH - activeRect.height) / 2;
       const max = list.scrollHeight - listH;
-      list.scrollTo({
-        top: Math.max(0, Math.min(target, max)),
-        behavior: 'smooth',
-      });
+      const next = Math.max(0, Math.min(target, max));
+      if (next !== list.scrollTop) {
+        list.scrollTo({ top: next, behavior: 'smooth' });
+      }
     }
 
     if (rawEl)  rawEl.innerHTML  = renderRaw(globalIdx);
@@ -496,7 +527,7 @@
     const wrap = document.querySelector('.canvas-wrap');
     return { W: (wrap && wrap.clientWidth) || 1024, H: (wrap && wrap.clientHeight) || 480 };
   }
-  const DEFAULT_GRAPHICS_WIDTH_RATIO = 0.615;
+  const DEFAULT_GRAPHICS_WIDTH_RATIO = 0.590;
   /* Aspect-correct a TARGET bbox (xmin, xmax, ymin, ymax) so that
      1 x-unit = 1 y-unit in pixels (circles stay circular). Caller's
      bbox is a hint; we expand whichever axis needs growing to match
@@ -690,6 +721,16 @@
     switchToTurn(activeTurn);
     const firstGlobal = allSteps.findIndex(s => s.turnIdx === activeTurn);
     showStep(firstGlobal >= 0 ? firstGlobal : 0);
+    // Unconditional reset on every demo switch — guarantees the new
+    // demo opens with step 1 anchored at the top of .tool-list (so
+    // PGPS opens showing steps 1–6, not the previous demo's scroll
+    // position bleed-over). Re-fired in rAF too so any focus-event /
+    // browser scroll-restoration that lands after the synchronous
+    // path gets overridden.
+    if (list) {
+      list.scrollTop = 0;
+      requestAnimationFrame(() => { list.scrollTop = 0; });
+    }
     if (ggbApi) startAutoplay();
   }
 
@@ -723,21 +764,47 @@
       console.warn('GGBApplet not loaded; canvas will stay blank.');
       return;
     }
-    const initDims = getCanvasDims();
-    const applet = new GGBApplet({
-      appName: 'classic',
-      width: initDims.W, height: initDims.H,
-      showToolBar: false, showAlgebraInput: false, showMenuBar: false,
-      showResetIcon: false, enableLabelDrags: false, enableShiftDragZoom: false,
-      enableRightClick: false, showZoomButtons: false, showFullscreenButton: false,
-      preventFocus: false,
-      appletOnLoad: function (api) {
-        ggbApi = api;
-        renderedStep = -1;
-        requestAnimationFrame(() => requestAnimationFrame(() => { startAutoplay(); }));
-      },
-    }, true);
-    if (document.readyState === 'complete') applet.inject('ggb-applet');
-    else window.addEventListener('load', () => applet.inject('ggb-applet'));
+    // Defer applet creation until .canvas-wrap is actually visible.
+    // When the page loads with #focus=paradigms, body.focus-paradigms
+    // hides #demo via display:none, so wrap.clientWidth/Height are 0.
+    // Initializing GGB at 0×0 traps the applet at its 1024×480
+    // fallback — even after focus exits, the canvas renders with the
+    // wrong aspect because the internal scaling is locked from init.
+    // Instead we WAIT for the wrap to have real dims (focus exit
+    // restores #demo's display) before injecting the applet.
+    const wrapEl = document.querySelector('.canvas-wrap');
+    let injected = false;
+    function tryInjectApplet() {
+      if (injected) return;
+      const W = wrapEl ? wrapEl.clientWidth : 0;
+      const H = wrapEl ? wrapEl.clientHeight : 0;
+      if (!W || !H) return;
+      injected = true;
+      const applet = new GGBApplet({
+        appName: 'classic',
+        width: W, height: H,
+        showToolBar: false, showAlgebraInput: false, showMenuBar: false,
+        showResetIcon: false, enableLabelDrags: false, enableShiftDragZoom: false,
+        enableRightClick: false, showZoomButtons: false, showFullscreenButton: false,
+        preventFocus: false,
+        appletOnLoad: function (api) {
+          ggbApi = api;
+          renderedStep = -1;
+          requestAnimationFrame(() => requestAnimationFrame(() => { startAutoplay(); }));
+        },
+      }, true);
+      if (document.readyState === 'complete') applet.inject('ggb-applet');
+      else window.addEventListener('load', () => applet.inject('ggb-applet'));
+    }
+    tryInjectApplet();   // try immediately (Case A: page loaded outside focus)
+    if (!injected && wrapEl && typeof ResizeObserver !== 'undefined') {
+      // Case B: deferred — applet inits the moment focus exit makes the
+      // wrap visible with real dims.
+      const ro = new ResizeObserver(() => {
+        tryInjectApplet();
+        if (injected) ro.disconnect();
+      });
+      ro.observe(wrapEl);
+    }
   });
 })();
