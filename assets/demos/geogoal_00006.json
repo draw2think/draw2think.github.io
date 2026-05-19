@@ -12,10 +12,10 @@
       "tag": true
     }
   ],
-  "question": "",
+  "question": "As shown in the figure, point O and point A satisfy OA = 10. Point B is on the line through A perpendicular to AO (this line is tangent to the circle centered at O with radius OA at A). Let F be the centroid of triangle ABO, and let C, D, E be the midpoints of AO, BO, and BA, respectively. Let G be a point on the circle centered at F with radius FD. Let H be a point such that triangle GHB is right-angled at H. Find the following values: T0 = T = (ae/be)/(do/bd), T1 = T = angle(ao,de) in degrees (mod 180), T2 = T = (ac/co)/(ae/be), T3 = T = angle(bo,ce) in degrees (mod 180), T4 = T = angle(ce,de) - angle(do,co) in degrees (mod 180). Provide your answers as a list [T0, T1, T2, T3, T4] ().",
   "choices": [],
   "expected": null,
-  "input_image": null,
+  "input_image": "assets/demos/geogoal_00006_input.png",
   "viewport": [
     -10.0,
     10.0,

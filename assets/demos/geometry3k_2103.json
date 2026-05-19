@@ -32,7 +32,7 @@
     }
   ],
   "expected": "B",
-  "input_image": null,
+  "input_image": "assets/demos/geometry3k_2103_input.png",
   "viewport": [
     -8.0,
     39.0,

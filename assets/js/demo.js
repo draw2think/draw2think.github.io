@@ -494,33 +494,49 @@
     if (meta && meta.isSignal) return;
 
     if (!ggbApi || globalIdx === renderedStep) return;
+    const prevStep = renderedStep;
     renderedStep = globalIdx;
     try {
-      ggbApi.reset();
-      // Default canvas = clean white paper. The trajectory can turn
-      // axes / grid back on explicitly via `render_show_axes` /
-      // `render_show_grid` (mapped through NATIVE_DISPATCH). GenExam
-      // render trajectories typically do call them when they want the
-      // axes for an analytic-geometry plot.
-      ggbApi.setAxesVisible(false, false);
-      ggbApi.setGridVisible(false);
-      // Replay ALL ok-true commands. ok-false steps, styling commands
-      // (render_*, set_label_visible, ...), and phantom signal entries
-      // go through applyStep — which (a) dispatches scripting commands
-      // to the native GGB API (evalCommand returns false for those),
-      // and (b) skips phantom signals entirely.
-      let modelSetCoord = false;
-      for (let i = 0; i <= globalIdx; i++) {
-        const st = allSteps[i];
-        if (!st || st.ok === false || st.isSignal) continue;
-        applyStep(ggbApi, st);
-        if (st.raw && st.raw.tool === 'render_set_coord_system') modelSetCoord = true;
+      // FAST PATH — forward step from a valid previous state: apply
+      // only the new step(s), no reset. Saves the O(N²) replay cost
+      // that GGB accumulates during autoplay cycles (a 39-step demo
+      // would otherwise replay 780 evalCommands per cycle).
+      // FULL REPLAY — initial load, backward jump, or cross-demo
+      // switch goes through reset + replay 0..globalIdx.
+      const canForward = prevStep >= 0 && globalIdx > prevStep;
+      if (canForward) {
+        for (let i = prevStep + 1; i <= globalIdx; i++) {
+          const st = allSteps[i];
+          if (!st || st.ok === false || st.isSignal) continue;
+          applyStep(ggbApi, st);
+        }
+      } else {
+        ggbApi.reset();
+        // Default canvas = clean white paper. The trajectory can turn
+        // axes / grid back on explicitly via `render_show_axes` /
+        // `render_show_grid` (mapped through NATIVE_DISPATCH). GenExam
+        // render trajectories typically do call them when they want the
+        // axes for an analytic-geometry plot.
+        ggbApi.setAxesVisible(false, false);
+        ggbApi.setGridVisible(false);
+        // Replay ALL ok-true commands. ok-false steps, styling commands
+        // (render_*, set_label_visible, ...), and phantom signal entries
+        // go through applyStep — which (a) dispatches scripting commands
+        // to the native GGB API (evalCommand returns false for those),
+        // and (b) skips phantom signals entirely.
+        let modelSetCoord = false;
+        for (let i = 0; i <= globalIdx; i++) {
+          const st = allSteps[i];
+          if (!st || st.ok === false || st.isSignal) continue;
+          applyStep(ggbApi, st);
+          if (st.raw && st.raw.tool === 'render_set_coord_system') modelSetCoord = true;
+        }
+        // Only fit to the demo's natural viewport when the model didn't
+        // already pick its own. For GenExam render trajectories the
+        // model's final `SetCoordSystem` is the intended camera — don't
+        // overwrite it with our aspect-corrected default.
+        if (!modelSetCoord) fitViewport();
       }
-      // Only fit to the demo's natural viewport when the model didn't
-      // already pick its own. For GenExam render trajectories the
-      // model's final `SetCoordSystem` is the intended camera — don't
-      // overwrite it with our aspect-corrected default.
-      if (!modelSetCoord) fitViewport();
     } catch (e) { console.warn('Canvas replay failed:', e); }
   }
 
@@ -807,6 +823,41 @@
         if (injected) ro.disconnect();
       });
       ro.observe(wrapEl);
+    }
+
+    // ─── Pause autoplay when not actually being looked at ─────────
+    // Without these guards, autoplay keeps cycling reset+replay every
+    // ~1s in the background even when the user switched tabs or
+    // scrolled past the demo. Over time GGB's internal buffers grow
+    // and the canvas becomes visibly laggy. Page Visibility API
+    // covers tab switch; IntersectionObserver covers scroll-away.
+    let pausedByVisibility = false;
+    let pausedByScroll = false;
+    const resumeIfReady = () => {
+      if (!pausedByVisibility && !pausedByScroll && ggbApi) {
+        startAutoplay(activeGlobalIdx);
+      }
+    };
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        pausedByVisibility = true;
+        stopAutoplay();
+      } else {
+        pausedByVisibility = false;
+        resumeIfReady();
+      }
+    });
+    const demoSection = document.getElementById('demo');
+    if (demoSection && typeof IntersectionObserver !== 'undefined') {
+      new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) {
+          pausedByScroll = true;
+          stopAutoplay();
+        } else {
+          pausedByScroll = false;
+          resumeIfReady();
+        }
+      }, { threshold: 0.05 }).observe(demoSection);
     }
   });
 })();

@@ -32,7 +32,7 @@
     }
   ],
   "expected": "C",
-  "input_image": null,
+  "input_image": "assets/demos/pgps9k_152_input.png",
   "viewport": [
     -15.0,
     15.0,
