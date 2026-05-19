@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600,700" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans:wght@500;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Noto+Sans:wght@500;600;700&amp;family=Source+Serif+4:wght@400;600&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="assets/style.css">
@@ -147,14 +147,15 @@
       </li>
       <li>
         <strong>The engine verifies during construction.</strong>
-        A frozen VLM proposes typed ToolSpecs; GeoGebra executes or rejects them;
+        A frozen VLM proposes typed ToolSpecs; the engine executes or rejects them;
         exact observations return before the model commits to the next step.
+        Tool calls become checked premises for subsequent reasoning.
       </li>
       <li>
-        <strong>The lesson is selective grounding.</strong>
-        External engines help most when construction, measurement, or state tracking
-        is the bottleneck. When the internal route is already cheap, forcing a canvas
-        can become overhead; that boundary is part of the finding.
+        <strong>We find that grounding is selective.</strong>
+        External grounding pays off when construction, measurement, or state tracking
+        is the bottleneck. On saturated textbook-style problems, forcing a canvas
+        can impose cost without adding evidence; that boundary is part of the result.
       </li>
     </ul>
   </div>
@@ -291,14 +292,14 @@
       Draw2Think wraps a frozen VLM around a dynamic-geometry engine via typed
       ToolSpecs. In dynamic geometry systems such as GeoGebra, construction commands
       enforce geometric relationships <em>algebraically</em> rather than by coordinate
-      approximation. Each accepted action is therefore engine-checkable; trajectory-level
-      strategy stays with the model.
+      approximation. Each accepted action is therefore engine-checkable, while the
+      model still chooses the construction strategy.
     </p>
 
     <ol class="loop">
       <li>
         <span class="loop-tag">Propose</span>
-        The VLM reads problem + current canvas snapshot and emits a typed ToolSpec call
+        The VLM reads the problem and current canvas snapshot, then emits one or more typed ToolSpec calls
         (e.g., <code>line_through_perpendicular</code>, <code>circle_through_center</code>).
       </li>
       <li>
@@ -308,8 +309,8 @@
       </li>
       <li>
         <span class="loop-tag">Verify</span>
-        Structured observations &mdash; exact lengths, angles, intersections, error
-        messages &mdash; return to the model and ground the next step.
+        Structured observations (exact lengths, angles, intersections, error
+        messages) return to the model and ground the next step.
       </li>
     </ol>
 
@@ -328,7 +329,7 @@
   <div class="container">
     <h2>Live walk-through</h2>
     <p class="lead">
-      Real Draw2Think trajectories across four datasets. Pick a problem below &mdash;
+      Five real Draw2Think trajectories from four datasets. Pick a problem below &mdash;
       <strong>hover or click any <em>Engine command</em> step</strong>; the
       model response (left), engine output (right), and live canvas (below) all
       snap to that step in lock-step. For multi-turn problems, the turn tabs at
@@ -414,6 +415,7 @@
               </div>
             </div>
           </div>
+          <p class="canvas-note">If the canvas renders incorrectly, refresh with Ctrl/Cmd + Shift + R.</p>
         </div>
       </div>
     </div>
@@ -425,9 +427,8 @@
   <div class="container">
     <h2>Insights from the Harness</h2>
     <p class="lead">
-      Constraint interaction changes <em>where</em> uncertainty is allowed to live:
-      the model can still explore strategy, but accepted canvas state is no longer
-      just a latent guess.
+      Constraint interaction separates latent strategy from checked state: the model
+      still explores, while accepted canvas state is already engine-checked.
     </p>
 
     <div class="insight-grid">
@@ -443,11 +444,11 @@
 
       <article class="insight-card">
         <span class="insight-kicker">Selective grounding</span>
-        <h3>External tools help when they remove the active bottleneck.</h3>
+        <h3>External grounding pays off when geometry is the bottleneck.</h3>
         <p>
-          The loop is most valuable when the model needs exact measurements,
-          constraint-consistent construction, or a stable state to inspect. On easy
-          or memorized routes, building the canvas can be extra work rather than help.
+          The gain appears when the model needs exact measurements,
+          consistent construction, or a stable state. On easy or memorized routes,
+          building the canvas can impose cost rather than add evidence.
         </p>
       </article>
 
@@ -455,8 +456,8 @@
         <span class="insight-kicker">Auditable state</span>
         <h3>Outcome accuracy hides too many failure modes.</h3>
         <p>
-          A final answer cannot tell whether perception, construction, measurement,
-          or algebra failed. A canvas audit lets us ask whether the intermediate
+          A final answer does not separate perception, construction, measurement,
+          and algebra errors. A canvas audit lets us ask whether the intermediate
           geometry itself was realized, independently of the final response.
         </p>
       </article>
@@ -467,11 +468,11 @@
 <!-- ─── MECHANISMS ────────────────────────────────────────────── -->
 <section class="band alt" id="mechanisms">
   <div class="container narrow">
-    <h2>Mechanisms Worth Taking Away</h2>
+    <h2>Mechanisms</h2>
     <p class="lead">
-      Draw2Think is useful as a geometry system, but the broader design lesson is
-      about how to wrap a generative model with a deterministic substrate without
-      moving strategy selection out of the policy layer.
+      Beyond geometry, Draw2Think shows how a generative model can
+      use a deterministic engine for checks while keeping construction choices under
+      model control.
     </p>
 
     <div class="mechanism-list">
@@ -479,26 +480,36 @@
         <h3>Readout is part of reasoning.</h3>
         <p>
           Query tools turn exact engine state into answerable evidence. When that channel is
-          removed, the model falls back to internal reasoning or indirect construction
-          side effects.
+          removed, answers shift toward escape routes: internal reasoning,
+          construction-return shortcuts, or unanchored final responses.
         </p>
       </article>
 
       <article class="mechanism-item">
-        <h3>ToolSpec wording changes trajectories.</h3>
+        <h3>Cached context changes the cost profile.</h3>
         <p>
-          The interface is a behavioral surface. Small descriptions can move effort
-          between latent simulation and engine-facing action, because the model is
-          choosing among typed operations rather than emitting arbitrary pixels.
+          With cacheable input context, marginal cost shifts toward generated
+          reasoning. On high-thinking benchmarks, engine readouts cut thinking
+          tokens by up to 36%, while ToolSpecs turn free-form text into typed calls
+          and structured observations.
+        </p>
+      </article>
+
+      <article class="mechanism-item">
+        <h3>ToolSpecs shape trajectories.</h3>
+        <p>
+          The interface is a control surface for tool orchestration. Small descriptions
+          shift tool selection, parameter binding, and readout anchoring because the
+          model chooses among typed operations rather than emitting arbitrary pixels.
         </p>
       </article>
 
       <article class="mechanism-item">
         <h3>Per-action verification leaves strategy open.</h3>
         <p>
-          GeoGebra can reject invalid constructions and return exact observations,
-          but it does not decide which auxiliary object to introduce or when a diagram
-          is sufficient. The remaining failures point to policy-level planning.
+          GeoGebra can reject invalid constructions and return exact observations.
+          Auxiliary-object selection and stopping decisions remain with the model,
+          so residual failures point to policy-level planning.
         </p>
       </article>
     </div>
@@ -510,9 +521,9 @@
   <div class="container">
     <h2>Future Directions</h2>
     <p class="lead">
-      The next step is to treat Draw2Think as a route toward verifiable process,
-      with final-answer gains as one outcome rather than the sole objective. The same interface ideas suggest stronger
-      planning signals, broader executable substrates, and reusable process data.
+      Future work could use Draw2Think to study process evidence directly, treating
+      final-answer gains as one metric among canvas audits, planning signals, and
+      reusable trajectory data.
     </p>
 
     <div class="future-grid">
@@ -521,28 +532,29 @@
         <h3>Expose more than the rendered canvas.</h3>
         <p>
           Future harnesses can return dependency graphs, unresolved constraints, and
-          symbolic query opportunities so the model can reason about the construction
-          plan, not only the visible objects.
+          symbolic query opportunities so the model can reason from the construction
+          plan alongside visible objects, measurements, and final pixels.
         </p>
       </article>
 
       <article class="future-card">
         <span class="future-kicker">Proximal twins</span>
-        <h3>Generalize the idea beyond geometry.</h3>
+        <h3>Generalize toward physical-world reasoning.</h3>
         <p>
-          Geometry is a clean testbed because the engine can reject invalid actions
-          and expose local state. The same pattern may apply wherever a task has an
-          executable surrogate that is cheaper and more reliable than latent checking.
+          Geometry isolates the setting: the engine rejects invalid actions and exposes
+          local state. Similar loops may extend to physical-world AI when tasks have
+          typed actions, an executable twin, and cheap local checks before acting in
+          the real system.
         </p>
       </article>
 
       <article class="future-card">
         <span class="future-kicker">Reusable trajectories</span>
-        <h3>Treat process records as data.</h3>
+        <h3>Treat process records as assets.</h3>
         <p>
           A Draw2Think trajectory contains typed dependencies, engine verdicts, and
-          concrete canvas effects. That makes it a richer supervision object than a
-          final answer or a free-form explanation.
+          concrete canvas effects. That makes it a denser training signal than a final
+          answer or a free-form explanation.
         </p>
       </article>
     </div>
@@ -574,7 +586,7 @@
   <div class="container narrow">
     <p>
       <strong>Acknowledgements.</strong>
-      We thank, in particular, the following projects / products / talks:
+      We thank, in particular, the following projects / products / posts / talks:
       <br>
       &middot; <a href="https://github.com/geogebra">GeoGebra</a> &mdash; the public dynamic-geometry construction kernel (<a href="https://www.geogebra.org/calculator">try the web calculator</a>);
       <br>
@@ -585,6 +597,8 @@
       &middot; <a href="https://github.com/OpenGVLab/GenExam">GenExam</a> &mdash; the rendering benchmark and evaluation protocol;
       <br>
       &middot; <a href="https://limit-of-rlvr.github.io/">Limit-of-RLVR</a> &mdash; our webpage design reference.
+      <br>
+      &middot; <a href="https://lilianweng.github.io/posts/2025-05-01-thinking/">Lilian Weng: Why We Think</a> (1 May, 2025).
       <br>
       &middot; <a href="https://www.youtube.com/watch?v=y5qEFrZv-2Q">Thang Luong: Towards AI Superhuman Reasoning for Math and Beyond</a> (4 Nov, 2024).
     </p>

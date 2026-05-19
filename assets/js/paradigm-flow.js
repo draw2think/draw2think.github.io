@@ -30,10 +30,85 @@
   }
   /* Observation block has empty right area in the original fig — shrink
      it so the label has room and the L bottom-horizontal segment can
-     start cleanly at the obs east edge. */
-  .observation {
+     start cleanly at the obs east edge. The geogebra canvas snapshot
+     occupies the previously-empty right column, vertically centred
+     parallel to the title + bullets text block. */
+  /* Two-class .node.observation beats the bare .node flex-column rule
+     declared below; without that extra specificity the image just
+     stacks as a third flex child instead of taking column 2.
+     margin-right stays at 50px so the node's right border keeps its
+     original position flush with the L-return's left endpoint — the
+     image must fit inside the existing internal space, with title and
+     bullets shrinking to accommodate it. */
+  .node.observation {
     margin-right: 50px;
     background: #fff;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 6px;
+    align-items: center;
+  }
+  /* Allow title to wrap when col 1 is narrow (originally white-space:
+     nowrap on .title forces single line and pushes col 2 out). */
+  .node.observation .title {
+    grid-column: 1;
+    grid-row: 1;
+    white-space: normal;
+    line-height: 1.15;
+  }
+  .node.observation .bullets { grid-column: 1; grid-row: 2; min-width: 0; }
+  /* Image is wrapped in <a download> so users can click to save the
+     canvas snapshot. Position: relative anchors the corner download
+     icon overlay. */
+  .node.observation .obs-illustration-wrap {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    position: relative;
+    display: block;
+    align-self: center;
+    text-decoration: none;
+    line-height: 0;
+    /* shift the image + icon group left 5px so the icon doesn't hug
+       the obs node's right border too tightly */
+    margin-right: 5px;
+  }
+  .node.observation .obs-illustration {
+    width: 76px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.92;
+    display: block;
+  }
+  /* Tiny download icon (8x8) positioned OUTSIDE the image's right edge,
+     top-aligned with the image. Sits in the obs node's padding-right
+     area to the right of the canvas snapshot, not overlaid on top of
+     it. left:100% places the icon just past the wrap's right edge. */
+  .node.observation .obs-download-icon {
+    position: absolute;
+    top: 0;
+    /* small breathing room between image right edge and icon left edge */
+    left: calc(100% + 3px);
+    width: 8px;
+    height: 8px;
+    color: #095462;
+    /* circular hover halo (transparent until hover) — affords clickability */
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+    transition: transform 0.15s ease, color 0.15s ease,
+                background 0.15s ease, box-shadow 0.15s ease;
+  }
+  .node.observation .obs-illustration-wrap:hover .obs-download-icon {
+    transform: scale(1.08);
+    color: #06414c;
+    /* gentle teal disc + soft outer glow — subtle button affordance. */
+    background: rgba(9, 84, 98, 0.07);
+    box-shadow:
+      0 0 0 1.5px rgba(9, 84, 98, 0.10),
+      0 0 4px 1px rgba(9, 84, 98, 0.06);
+  }
+  .node.observation .obs-illustration-wrap:hover .obs-illustration {
+    opacity: 1;
   }
   .node {
     display: flex;
@@ -1156,6 +1231,22 @@
     <li>canvas state / object deltas</li>
     <li>exact query values</li>
   </ul>
+  <a class="obs-illustration-wrap"
+     href="assets/demos/canvas_op.xml"
+     download="draw2think_engine_canvas.xml"
+     title="Download GeoGebra source (XML)">
+    <img class="obs-illustration"
+         src="assets/demos/canvas_op.png"
+         alt="engine canvas snapshot: triangle with inscribed circle" />
+    <svg class="obs-download-icon"
+         viewBox="0 0 12 12" aria-hidden="true"
+         fill="none" stroke="currentColor"
+         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 1.5 v6.5" />
+      <polyline points="3.5 5.5 6 8 8.5 5.5" />
+      <path d="M2 10.2 h8" />
+    </svg>
+  </a>
 </div>
 
 <!-- L-return (asymmetric horizontals): obs is shrunk by margin-right
