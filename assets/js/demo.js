@@ -427,8 +427,10 @@
     set_label_visible:         (api, a) => api.setLabelVisible(a.name, _bool(a.visible)),
     set_object_visible:        (api, a) => api.setVisible(a.name, _bool(a.visible)),
     rename_object:             (api, a) => {
-      try { api.renameObject(a.old, a.new); }
-      catch (_) { try { api.evalCommand('Rename(' + a.old + ', "' + a.new + '")'); } catch (_2) {} }
+      const oldName = a.name ?? a.old;
+      const newName = a.new_name ?? a.new;
+      try { api.renameObject(oldName, newName); }
+      catch (_) { try { api.evalCommand('Rename(' + oldName + ', "' + newName + '")'); } catch (_2) {} }
     },
   };
 

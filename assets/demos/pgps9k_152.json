@@ -32,19 +32,19 @@
     }
   ],
   "expected": "C",
-  "input_image": "assets/demos/pgps9k_152_input.png",
+  "input_image": null,
   "viewport": [
-    -15,
-    15,
-    -3,
-    27
+    -15.0,
+    15.0,
+    -3.0,
+    27.0
   ],
   "turns": [
     {
       "index": 1,
       "phase": null,
       "signal": null,
-      "summary": "11 ok · 2 ✗",
+      "summary": "5 ok · 6 ✗",
       "steps": [
         {
           "raw": {
@@ -52,16 +52,16 @@
             "args": {
               "name": "R",
               "x": 0,
-              "y": 12
+              "y": 0
             }
           },
-          "cmd": "R = (0, 12)",
+          "cmd": "R = (0, 0)",
           "ok": true,
           "diff": [
             [
               "R",
               "point",
-              "R = (0, 12)"
+              "R = (0, 0)"
             ]
           ],
           "note": ""
@@ -72,16 +72,16 @@
             "args": {
               "name": "K",
               "x": 5,
-              "y": 12
+              "y": 0
             }
           },
-          "cmd": "K = (5, 12)",
+          "cmd": "K = (5, 0)",
           "ok": true,
           "diff": [
             [
               "K",
               "point",
-              "K = (5, 12)"
+              "K = (5, 0)"
             ]
           ],
           "note": ""
@@ -90,38 +90,18 @@
           "raw": {
             "tool": "add_point",
             "args": {
-              "name": "Y_temp",
-              "x": 5,
-              "y": 24
+              "name": "Z",
+              "x": 10,
+              "y": 0
             }
           },
-          "cmd": "Y_temp = (5, 24)",
+          "cmd": "Z = (10, 0)",
           "ok": true,
           "diff": [
             [
-              "Y_temp",
+              "Z",
               "point",
-              "Y_temp = (5, 24)"
-            ]
-          ],
-          "note": ""
-        },
-        {
-          "raw": {
-            "tool": "add_line",
-            "args": {
-              "name": "diag1_line",
-              "p1": "R",
-              "p2": "K"
-            }
-          },
-          "cmd": "diag1_line = Line(R, K)",
-          "ok": true,
-          "diff": [
-            [
-              "diag1_line",
-              "line",
-              "diag1_line: y = 12"
+              "Z = (10, 0)"
             ]
           ],
           "note": ""
@@ -130,18 +110,32 @@
           "raw": {
             "tool": "add_perpendicular_line",
             "args": {
-              "name": "diag2_line",
+              "name": "perp_K",
               "point": "K",
-              "line": "diag1_line"
+              "line": "line_RZ"
             }
           },
-          "cmd": "diag2_line = PerpendicularLine(K, diag1_line)",
+          "cmd": "perp_K = PerpendicularLine(K, line_RZ)",
+          "ok": false,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_line",
+            "args": {
+              "name": "line_RZ",
+              "p1": "R",
+              "p2": "Z"
+            }
+          },
+          "cmd": "line_RZ = Line(R, Z)",
           "ok": true,
           "diff": [
             [
-              "diag2_line",
+              "line_RZ",
               "line",
-              "diag2_line: x = 5"
+              "line_RZ: y = 0"
             ]
           ],
           "note": ""
@@ -150,18 +144,18 @@
           "raw": {
             "tool": "add_circle",
             "args": {
-              "name": "c1",
+              "name": "circ_R13",
               "center": "R",
               "radius": 13
             }
           },
-          "cmd": "c1 = Circle(R, 13)",
+          "cmd": "circ_R13 = Circle(R, 13)",
           "ok": true,
           "diff": [
             [
-              "c1",
+              "circ_R13",
               "circle",
-              "c1: x² + (y - 12)² = 169"
+              "circ_R13: x² + y² = 169"
             ]
           ],
           "note": ""
@@ -169,137 +163,72 @@
         {
           "raw": {
             "tool": "add_intersect",
-            "args": {
-              "name": "Y_pts",
-              "obj1": "c1",
-              "obj2": "diag2_line"
-            }
-          },
-          "cmd": "Y_pts = Intersect(c1, diag2_line)",
-          "ok": false,
-          "diff": [],
-          "note": "Intersection point undefined (objects do not intersect)"
-        },
-        {
-          "raw": {
-            "tool": "add_point",
             "args": {
               "name": "Y",
-              "x": 5,
-              "y": 24
-            }
-          },
-          "cmd": "Y = (5, 24)",
-          "ok": true,
-          "diff": [
-            [
-              "Y_{1}",
-              "point",
-              "Y_{1} = (5, 0)"
-            ],
-            [
-              "Y_{2}",
-              "point",
-              "Y_{2} = (5, 24)"
-            ],
-            [
-              "Y",
-              "point",
-              "Y = (5, 24)"
-            ]
-          ],
-          "note": ""
-        },
-        {
-          "raw": {
-            "tool": "delete_object",
-            "args": {
-              "name": "Y_pts"
-            }
-          },
-          "cmd": "Delete(Y_pts)",
-          "ok": false,
-          "diff": [],
-          "note": "Object 'Y_pts' not found"
-        },
-        {
-          "raw": {
-            "tool": "add_intersect",
-            "args": {
-              "name": "Y_pt1",
-              "obj1": "c1",
-              "obj2": "diag2_line",
+              "obj1": "perp_K",
+              "obj2": "circ_R13",
               "index": 1
             }
           },
-          "cmd": "Y_pt1 = Intersect(c1, diag2_line, 1)",
-          "ok": true,
-          "diff": [
-            [
-              "Y_pt1",
-              "point",
-              "Y_pt1 = (5, 0)"
-            ]
-          ],
+          "cmd": "Y = Intersect(perp_K, circ_R13, 1)",
+          "ok": false,
+          "diff": [],
           "note": ""
         },
         {
           "raw": {
             "tool": "add_intersect",
             "args": {
-              "name": "Y_pt2",
-              "obj1": "c1",
-              "obj2": "diag2_line",
+              "name": "P_temp",
+              "obj1": "perp_K",
+              "obj2": "circ_R13",
               "index": 2
             }
           },
-          "cmd": "Y_pt2 = Intersect(c1, diag2_line, 2)",
-          "ok": true,
-          "diff": [
-            [
-              "Y_pt2",
-              "point",
-              "Y_pt2 = (5, 24)"
-            ]
-          ],
+          "cmd": "P_temp = Intersect(perp_K, circ_R13, 2)",
+          "ok": false,
+          "diff": [],
           "note": ""
         },
         {
           "raw": {
-            "tool": "query_y_coord",
+            "tool": "rename_object",
             "args": {
-              "name": "y_Y1",
-              "arg0": "Y_pt1"
+              "name": "P_temp",
+              "new_name": "P"
             }
           },
-          "cmd": "y_Y1 = y(Y_pt1)",
-          "ok": true,
-          "diff": [
-            [
-              "y_Y1",
-              "numeric",
-              "y_Y1 = 0"
-            ]
-          ],
+          "cmd": "Rename(P_temp→P)",
+          "ok": false,
+          "diff": [],
+          "note": "Object 'P_temp' does not exist"
+        },
+        {
+          "raw": {
+            "tool": "add_polygon",
+            "args": {
+              "name": "rhombus_PRYZ",
+              "points": "P,R,Y,Z"
+            }
+          },
+          "cmd": "rhombus_PRYZ = Polygon(P, R, Y, Z)",
+          "ok": false,
+          "diff": [],
           "note": ""
         },
         {
           "raw": {
-            "tool": "query_y_coord",
+            "tool": "query_angle",
             "args": {
-              "name": "y_Y2",
-              "arg0": "Y_pt2"
+              "name": "angle_PKR",
+              "a": "P",
+              "b": "K",
+              "c": "R"
             }
           },
-          "cmd": "y_Y2 = y(Y_pt2)",
-          "ok": true,
-          "diff": [
-            [
-              "y_Y2",
-              "numeric",
-              "y_Y2 = 24"
-            ]
-          ],
+          "cmd": "angle_PKR = Angle(P, K, R)",
+          "ok": false,
+          "diff": [],
           "note": ""
         }
       ]
@@ -308,44 +237,104 @@
       "index": 2,
       "phase": null,
       "signal": null,
-      "summary": "3 ok",
+      "summary": "6 ok",
       "steps": [
         {
           "raw": {
-            "tool": "transform_reflect_point",
+            "tool": "add_line",
             "args": {
-              "name": "Z",
-              "arg0": "R",
-              "arg1": "K"
+              "name": "line_RZ",
+              "p1": "R",
+              "p2": "Z"
             }
           },
-          "cmd": "Z = Reflect(R, K)",
+          "cmd": "line_RZ = Line(R, Z)",
+          "ok": true,
+          "diff": [],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_perpendicular_line",
+            "args": {
+              "name": "perp_K",
+              "point": "K",
+              "line": "line_RZ"
+            }
+          },
+          "cmd": "perp_K = PerpendicularLine(K, line_RZ)",
           "ok": true,
           "diff": [
             [
-              "Z",
-              "point",
-              "Z = (10, 12)"
+              "perp_K",
+              "line",
+              "perp_K: x = 5"
             ]
           ],
           "note": ""
         },
         {
           "raw": {
-            "tool": "transform_reflect_point",
+            "tool": "add_intersect",
             "args": {
-              "name": "P_pt",
-              "arg0": "Y_pt2",
-              "arg1": "K"
+              "name": "Y",
+              "obj1": "perp_K",
+              "obj2": "circ_R13",
+              "index": 1
             }
           },
-          "cmd": "P_pt = Reflect(Y_pt2, K)",
+          "cmd": "Y = Intersect(perp_K, circ_R13, 1)",
           "ok": true,
           "diff": [
             [
-              "P_pt",
+              "Y",
               "point",
-              "P_pt = (5, 0)"
+              "Y = (5, -12)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "P_temp",
+              "obj1": "perp_K",
+              "obj2": "circ_R13",
+              "index": 2
+            }
+          },
+          "cmd": "P_temp = Intersect(perp_K, circ_R13, 2)",
+          "ok": true,
+          "diff": [
+            [
+              "P_temp",
+              "point",
+              "P_temp = (5, 12)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "rename_object",
+            "args": {
+              "name": "P_temp",
+              "new_name": "P"
+            }
+          },
+          "cmd": "Rename(P_temp→P)",
+          "ok": true,
+          "diff": [
+            [
+              "P_temp",
+              "renamed",
+              "→ P"
+            ],
+            [
+              "P",
+              "object",
+              "P (renamed from P_temp)"
             ]
           ],
           "note": ""
@@ -355,12 +344,12 @@
             "tool": "query_angle",
             "args": {
               "name": "angle_PKR",
-              "p1": "R",
-              "p2": "K",
-              "p3": "P_pt"
+              "a": "P",
+              "b": "K",
+              "c": "R"
             }
           },
-          "cmd": "angle_PKR = Angle(R, K, P_pt)",
+          "cmd": "angle_PKR = Angle(P, K, R)",
           "ok": true,
           "diff": [
             [

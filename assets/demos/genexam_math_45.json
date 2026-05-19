@@ -33,7 +33,8 @@
           "raw": {
             "tool": "add_function",
             "args": {
-              "cmd": "f(x) = x^2"
+              "name": "f",
+              "expr": "x^2"
             }
           },
           "cmd": "f(x) = x^2",
@@ -51,7 +52,8 @@
           "raw": {
             "tool": "add_function",
             "args": {
-              "cmd": "g(x) = x^3"
+              "name": "g",
+              "expr": "x^3"
             }
           },
           "cmd": "g(x) = x^3",
@@ -118,10 +120,10 @@
             "tool": "add_integral_shade",
             "args": {
               "name": "area",
-              "arg0": "f",
-              "arg1": "g",
-              "arg2": 0,
-              "arg3": 1
+              "func": "f",
+              "func2": "g",
+              "x_start": 0,
+              "x_end": 1
             }
           },
           "cmd": "area = IntegralBetween(f, g, 0, 1)",
@@ -140,10 +142,10 @@
             "tool": "add_text",
             "args": {
               "name": "label_A",
-              "arg0": "(1, 1)",
-              "arg1": "(1.1, 1.1)",
-              "arg2": "false",
-              "arg3": "false"
+              "text": "(1, 1)",
+              "x": 1.1,
+              "y": 1.1,
+              "latex": 0
             }
           },
           "cmd": "label_A = Text(\"(1, 1)\", (1.1, 1.1), false, false)",

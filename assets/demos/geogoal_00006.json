@@ -12,10 +12,10 @@
       "tag": true
     }
   ],
-  "question": "As shown in the figure, point O and point A satisfy OA = 10. Point B is on the line through A perpendicular to AO (this line is tangent to the circle centered at O with radius OA at A). Let F be the centroid of triangle ABO, and let C, D, E be the midpoints of AO, BO, and BA, respectively. Let G be a point on the circle centered at F with radius FD. Let H be a point such that triangle GHB is right-angled at H. Find the following values: T0 = T = (ae/be)/(do/bd), T1 = T = angle(ao,de) in degrees (mod 180), T2 = T = (ac/co)/(ae/be), T3 = T = angle(bo,ce) in degrees (mod 180), T4 = T = angle(ce,de) - angle(do,co) in degrees (mod 180). Provide your answers as a list [T0, T1, T2, T3, T4] ().",
+  "question": "",
   "choices": [],
   "expected": null,
-  "input_image": "assets/demos/geogoal_00006_input.png",
+  "input_image": null,
   "viewport": [
     -10.0,
     10.0,
@@ -347,9 +347,9 @@
             "tool": "transform_dilate",
             "args": {
               "name": "H",
-              "arg0": "D",
-              "arg1": 0.3333333333333333,
-              "arg2": "X"
+              "obj": "D",
+              "factor": 0.3333333333333333,
+              "center": "X"
             }
           },
           "cmd": "H = Dilate(D, 0.3333333333333333, X)",
@@ -376,9 +376,9 @@
             "tool": "transform_dilate",
             "args": {
               "name": "I",
-              "arg0": "D",
-              "arg1": 0.666666666666666,
-              "arg2": "X"
+              "obj": "D",
+              "factor": 0.666666666666666,
+              "center": "X"
             }
           },
           "cmd": "I = Dilate(D, 0.666666666666666, X)",
@@ -804,12 +804,24 @@
           "raw": {
             "tool": "rename_object",
             "args": {
-              "old": "lineOE→eo"
+              "name": "lineOE",
+              "new_name": "eo"
             }
           },
           "cmd": "Rename(lineOE→eo)",
           "ok": true,
-          "diff": [],
+          "diff": [
+            [
+              "lineOE",
+              "renamed",
+              "→ eo"
+            ],
+            [
+              "eo",
+              "object",
+              "eo (renamed from lineOE)"
+            ]
+          ],
           "note": ""
         },
         {

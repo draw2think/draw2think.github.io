@@ -272,9 +272,9 @@
             "tool": "add_angle",
             "args": {
               "name": "ang_BEC",
-              "arg0": "B",
-              "arg1": "E",
-              "arg2": "C"
+              "p1": "B",
+              "vertex": "E",
+              "p2": "C"
             }
           },
           "cmd": "ang_BEC = Angle(B, E, C)",
@@ -354,10 +354,10 @@
             "tool": "add_text",
             "args": {
               "name": "label_OA",
-              "arg0": "OA=5",
-              "arg1": "(-2.5, 0.2)",
-              "arg2": "false",
-              "arg3": "true"
+              "text": "OA=5",
+              "x": -2.5,
+              "y": 0.2,
+              "latex": 1
             }
           },
           "cmd": "label_OA = Text(\"OA=5\", (-2.5, 0.2), false, true)",
@@ -384,10 +384,10 @@
             "tool": "add_text",
             "args": {
               "name": "label_OD",
-              "arg0": "OD=5",
-              "arg1": "(1.5, 2.2)",
-              "arg2": "false",
-              "arg3": "true"
+              "text": "OD=5",
+              "x": 1.5,
+              "y": 2.2,
+              "latex": 1
             }
           },
           "cmd": "label_OD = Text(\"OD=5\", (1.5, 2.2), false, true)",
@@ -406,10 +406,10 @@
             "tool": "add_text",
             "args": {
               "name": "label_CE",
-              "arg0": "CE=2",
-              "arg1": "(4, 0.2)",
-              "arg2": "false",
-              "arg3": "true"
+              "text": "CE=2",
+              "x": 4,
+              "y": 0.2,
+              "latex": 1
             }
           },
           "cmd": "label_CE = Text(\"CE=2\", (4, 0.2), false, true)",
@@ -576,9 +576,9 @@
             "tool": "render_add_right_angle_mark",
             "args": {
               "name": "mark_E",
-              "arg0": "B",
-              "arg1": "E",
-              "arg2": "C"
+              "a": "B",
+              "b": "E",
+              "c": "C"
             }
           },
           "cmd": "mark_E = Angle(B, E, C)",
