@@ -1,0 +1,239 @@
+{
+  "id": "geometry3k_2856",
+  "meta": [
+    {
+      "label": "Geometry3K"
+    },
+    {
+      "label": "#2856"
+    },
+    {
+      "label": "tangent · CAS-verified",
+      "tag": true
+    }
+  ],
+  "question": "The segment is tangent to the circle. Find x.",
+  "choices": [
+    {
+      "key": "A",
+      "value": "16"
+    },
+    {
+      "key": "B",
+      "value": "18"
+    },
+    {
+      "key": "C",
+      "value": "30"
+    },
+    {
+      "key": "D",
+      "value": "34"
+    }
+  ],
+  "expected": "16",
+  "input_image": "assets/demos/geometry3k_2856_input.png",
+  "viewport": [
+    -18.0,
+    32.0,
+    -25.0,
+    25.0
+  ],
+  "turns": [
+    {
+      "index": 1,
+      "phase": null,
+      "signal": null,
+      "summary": "1 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "query_solve",
+            "args": {
+              "name": "sol_x",
+              "equation": "x^2 + 30^2 = (x + 18)^2",
+              "variable": "x"
+            }
+          },
+          "cmd": "sol_x = Solve(x^2 + 30^2 = (x + 18)^2, x)",
+          "ok": true,
+          "diff": [
+            [
+              "sol_x",
+              "numeric",
+              "sol_x = sol_x = {x = 16}"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "A",
+              "x": 0,
+              "y": 0
+            }
+          },
+          "cmd": "A = (0, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "A",
+              "point",
+              "A = (0, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "B",
+              "x": 0,
+              "y": 16
+            }
+          },
+          "cmd": "B = (0, 16)",
+          "ok": true,
+          "diff": [
+            [
+              "B",
+              "point",
+              "B = (0, 16)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "C",
+              "x": 30,
+              "y": 16
+            }
+          },
+          "cmd": "C = (30, 16)",
+          "ok": true,
+          "diff": [
+            [
+              "C",
+              "point",
+              "C = (30, 16)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_circle",
+            "args": {
+              "name": "circ_A",
+              "center": "A",
+              "point": "B"
+            }
+          },
+          "cmd": "circ_A = Circle(A, B)",
+          "ok": true,
+          "diff": [
+            [
+              "circ_A",
+              "circle",
+              "circ_A: x² + y² = 256"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "phase": null,
+      "signal": null,
+      "summary": "3 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "AC_seg",
+              "p1": "A",
+              "p2": "C"
+            }
+          },
+          "cmd": "AC_seg = Segment(A, C)",
+          "ok": true,
+          "diff": [
+            [
+              "AC_seg",
+              "segment",
+              "AC_seg = 34"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_intersect",
+            "args": {
+              "name": "D",
+              "obj1": "AC_seg",
+              "obj2": "circ_A"
+            }
+          },
+          "cmd": "D = Intersect(AC_seg, circ_A)",
+          "ok": true,
+          "diff": [
+            [
+              "D",
+              "point",
+              "D = (14.12, 7.53)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "query_distance",
+            "args": {
+              "name": "dist_DC",
+              "obj1": "D",
+              "obj2": "C"
+            }
+          },
+          "cmd": "dist_DC = Distance(D, C)",
+          "ok": true,
+          "diff": [
+            [
+              "dist_DC",
+              "numeric",
+              "dist_DC = 18"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "phase": null,
+      "signal": "answer_emit",
+      "summary": "0 ok",
+      "steps": []
+    }
+  ],
+  "answer": {
+    "value": "16",
+    "choice": "A"
+  }
+}
