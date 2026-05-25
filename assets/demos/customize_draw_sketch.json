@@ -1,0 +1,486 @@
+{
+  "id": "customize_draw_sketch",
+  "meta": [
+    {
+      "label": "Customize"
+    },
+    {
+      "label": "#draw_sketch"
+    },
+    {
+      "label": "sketch -> construction",
+      "tag": true
+    }
+  ],
+  "question": "The image is a hand sketch of the word \"Draw\". Reproduce it on the canvas as four geometric elements laid out left to right, each rendered from its exact geometric definition (not free-hand points).\n\nPROPORTIONS (important): the baseline is y = 0. The capital 'D' has height 4 (from y=0 to y=4). The three lowercase letters r, a, w are HALF that height: each spans y=0 to y=2 and sits on the same baseline.\n\nVISIBILITY (important): mark the key points of every element as actual points (endpoints, arc start/end, circle center, parabola vertices and ends). This frames the whole figure correctly when exported.\n\nSuggested layout (refine if needed, keep this left-to-right order and these sizes):\n\n1. Letter D = a semicircle facing RIGHT. Vertical diameter from D2=(0,0) to D1=(0,4) on the left; the semicircular arc bulges to the right. Draw the diameter segment and the semicircle.\n\n2. Letter r = a short vertical stem plus a quarter-circle hook at the top, opening to the RIGHT (like a printed 'r'). Stem: a vertical segment from (3,0) to (3,2). Hook: a quarter arc starting at the top of the stem (3,2) and curving up-and-right to about (4,2) (a 90-degree arc whose center is near (3,2)).\n\n3. Letter a = a small full circle of radius 1 centered at (6,1) (so it spans y=0 to y=2), plus a short vertical 'foot' segment on the RIGHT. The foot runs ONLY from the tangent point (7,1) straight DOWN to its perpendicular foot on the baseline (7,0). Do NOT extend it above the tangent point. So: circle + segment from (7,1) to (7,0), tangent to the circle at (7,1).\n\n4. Letter w = two upward parabola pieces joined together, each spanning height 2 (valley at y=0, shoulders at y=2). Use w(x) = If(8 <= x < 10, 2*(x-9)^2, If(10 <= x <= 12, 2*(x-11)^2)). Also place visible points at the two valley bottoms (9,0) and (11,0) and the three shoulders (8,2), (10,2), (12,2) so the 'w' is anchored and fully framed.\n\nKeep the four elements non-overlapping and comparable in style. When the whole figure is constructed, finish.",
+  "choices": [],
+  "expected": null,
+  "input_image": "assets/demos/draw_sketch.png",
+  "viewport": [
+    -1.0,
+    13.0,
+    -1.0,
+    5.0
+  ],
+  "turns": [
+    {
+      "index": 1,
+      "phase": null,
+      "signal": null,
+      "summary": "4 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "D1",
+              "x": 0,
+              "y": 4
+            }
+          },
+          "cmd": "D1 = (0, 4)",
+          "ok": true,
+          "diff": [
+            [
+              "D1",
+              "point",
+              "D1 = (0, 4)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "D2",
+              "x": 0,
+              "y": 0
+            }
+          },
+          "cmd": "D2 = (0, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "D2",
+              "point",
+              "D2 = (0, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "seg_D1D2",
+              "p1": "D1",
+              "p2": "D2"
+            }
+          },
+          "cmd": "seg_D1D2 = Segment(D1, D2)",
+          "ok": true,
+          "diff": [
+            [
+              "seg_D1D2",
+              "segment",
+              "seg_D1D2 = 4"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_semicircle",
+            "args": {
+              "name": "semi_D",
+              "p1": "D1",
+              "p2": "D2"
+            }
+          },
+          "cmd": "semi_D = Semicircle(D1, D2)",
+          "ok": true,
+          "diff": [
+            [
+              "semi_D",
+              "arc",
+              "semi_D = 6.28"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "phase": null,
+      "signal": null,
+      "summary": "6 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pr1",
+              "x": 3,
+              "y": 0
+            }
+          },
+          "cmd": "Pr1 = (3, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "Pr1",
+              "point",
+              "Pr1 = (3, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pr2",
+              "x": 3,
+              "y": 2
+            }
+          },
+          "cmd": "Pr2 = (3, 2)",
+          "ok": true,
+          "diff": [
+            [
+              "Pr2",
+              "point",
+              "Pr2 = (3, 2)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pr3",
+              "x": 4,
+              "y": 1
+            }
+          },
+          "cmd": "Pr3 = (4, 1)",
+          "ok": true,
+          "diff": [
+            [
+              "Pr3",
+              "point",
+              "Pr3 = (4, 1)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Cr",
+              "x": 3,
+              "y": 1
+            }
+          },
+          "cmd": "Cr = (3, 1)",
+          "ok": true,
+          "diff": [
+            [
+              "Cr",
+              "point",
+              "Cr = (3, 1)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "seg_r_stem",
+              "p1": "Pr1",
+              "p2": "Pr2"
+            }
+          },
+          "cmd": "seg_r_stem = Segment(Pr1, Pr2)",
+          "ok": true,
+          "diff": [
+            [
+              "seg_r_stem",
+              "segment",
+              "seg_r_stem = 2"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_arc",
+            "args": {
+              "name": "arc_r_hook",
+              "center": "Cr",
+              "start_pt": "Pr3",
+              "end_pt": "Pr2"
+            }
+          },
+          "cmd": "arc_r_hook = CircularArc(Cr, Pr3, Pr2)",
+          "ok": true,
+          "diff": [
+            [
+              "arc_r_hook",
+              "arc",
+              "arc_r_hook = 1.57"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "phase": null,
+      "signal": null,
+      "summary": "5 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Ca",
+              "x": 6,
+              "y": 1
+            }
+          },
+          "cmd": "Ca = (6, 1)",
+          "ok": true,
+          "diff": [
+            [
+              "Ca",
+              "point",
+              "Ca = (6, 1)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pa1",
+              "x": 7,
+              "y": 1
+            }
+          },
+          "cmd": "Pa1 = (7, 1)",
+          "ok": true,
+          "diff": [
+            [
+              "Pa1",
+              "point",
+              "Pa1 = (7, 1)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pa2",
+              "x": 7,
+              "y": 0
+            }
+          },
+          "cmd": "Pa2 = (7, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "Pa2",
+              "point",
+              "Pa2 = (7, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_circle",
+            "args": {
+              "name": "circ_a",
+              "center": "Ca",
+              "point": "Pa1"
+            }
+          },
+          "cmd": "circ_a = Circle(Ca, Pa1)",
+          "ok": true,
+          "diff": [
+            [
+              "circ_a",
+              "circle",
+              "circ_a: (x - 6)² + (y - 1)² = 1"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_segment",
+            "args": {
+              "name": "seg_a_foot",
+              "p1": "Pa1",
+              "p2": "Pa2"
+            }
+          },
+          "cmd": "seg_a_foot = Segment(Pa1, Pa2)",
+          "ok": true,
+          "diff": [
+            [
+              "seg_a_foot",
+              "segment",
+              "seg_a_foot = 1"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "phase": null,
+      "signal": null,
+      "summary": "6 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "add_function",
+            "args": {
+              "name": "w",
+              "expr": "If(8 <= x < 10, 2*(x-9)^2, If(10 <= x <= 12, 2*(x-11)^2))"
+            }
+          },
+          "cmd": "w(x) = If(8 <= x < 10, 2*(x-9)^2, If(10 <= x <= 12, 2*(x-11)^2))",
+          "ok": true,
+          "diff": [
+            [
+              "w",
+              "function",
+              "w(x) = If(8 ≤ x < 10, 2(x - 9)², If(10 ≤ x ≤ 12, 2(x - 11)²))"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pw1",
+              "x": 8,
+              "y": 2
+            }
+          },
+          "cmd": "Pw1 = (8, 2)",
+          "ok": true,
+          "diff": [
+            [
+              "Pw1",
+              "point",
+              "Pw1 = (8, 2)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pw2",
+              "x": 9,
+              "y": 0
+            }
+          },
+          "cmd": "Pw2 = (9, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "Pw2",
+              "point",
+              "Pw2 = (9, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pw3",
+              "x": 10,
+              "y": 2
+            }
+          },
+          "cmd": "Pw3 = (10, 2)",
+          "ok": true,
+          "diff": [
+            [
+              "Pw3",
+              "point",
+              "Pw3 = (10, 2)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pw4",
+              "x": 11,
+              "y": 0
+            }
+          },
+          "cmd": "Pw4 = (11, 0)",
+          "ok": true,
+          "diff": [
+            [
+              "Pw4",
+              "point",
+              "Pw4 = (11, 0)"
+            ]
+          ],
+          "note": ""
+        },
+        {
+          "raw": {
+            "tool": "add_point",
+            "args": {
+              "name": "Pw5",
+              "x": 12,
+              "y": 2
+            }
+          },
+          "cmd": "Pw5 = (12, 2)",
+          "ok": true,
+          "diff": [
+            [
+              "Pw5",
+              "point",
+              "Pw5 = (12, 2)"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "phase": null,
+      "signal": "construct_done",
+      "summary": "0 ok",
+      "steps": []
+    }
+  ]
+}

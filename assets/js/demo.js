@@ -757,6 +757,8 @@
     selectorEl.addEventListener('click', e => {
       const btn = e.target.closest('[data-demo-id]');
       if (!btn) return;
+      // Toggle .active — CSS handles the fold/expand purely from this
+      // class (no scroll math, no extra listeners).
       selectorEl.querySelectorAll('[data-demo-id]').forEach(b =>
         b.classList.toggle('active', b === btn));
       loadDemo(btn.dataset.demoId);

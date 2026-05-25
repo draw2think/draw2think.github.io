@@ -475,16 +475,24 @@ code, pre {
 }
 
 /* ─── Bench/problem selector (in the demo card's banner) ───────── */
+/* Accordion selector: all demos shown on one row (no scroll, so nothing
+   hides off-screen). The active pill expands to full detail; the rest
+   fold into short id-only boxes. Fold is driven purely by the `.active`
+   class via a single max-width transition — no JS, no listeners. */
 .demo-selector {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 6px;
+  width: 100%;
   margin: 0 0 14px;
 }
 .demo-selector button {
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
+  min-width: 0;                      /* allow folded boxes to shrink to fit */
+  overflow: hidden;
+  white-space: nowrap;
   padding: 8px 14px;
   border: 1px solid var(--border);
   border-radius: 22px;
@@ -493,14 +501,31 @@ code, pre {
   font-size: 0.92rem;
   color: var(--text-muted);
   cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  /* Single-property fold animation — cheap, no layout thrash. */
+  transition: max-width 0.25s ease, color 0.15s ease,
+              border-color 0.15s ease, background 0.15s ease;
 }
-.demo-selector button:hover {
-  color: var(--accent-dark);
-  border-color: var(--accent);
+.demo-selector button:hover { color: var(--accent-dark); border-color: var(--accent); }
+
+/* Folded (inactive): short box showing only the id token. */
+.demo-selector button:not(.active) {
+  flex: 0 1 auto;
+  max-width: 76px;
+  padding: 8px 12px;
 }
+.demo-selector button:not(.active) .pill-bench,
+.demo-selector button:not(.active) .pill-tag { display: none; }
+.demo-selector button:not(.active) .pill-id {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Expanded (active): grows to show bench + id + tag, accent fill,
+   with the white label centered in the widened box. */
 .demo-selector button.active {
+  flex: 1 1 auto;
+  max-width: 100%;
+  justify-content: center;
   background: var(--accent);
   border-color: var(--accent);
   color: #fff;
