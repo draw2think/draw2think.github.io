@@ -1,0 +1,111 @@
+{
+  "id": "geometry3k_2171",
+  "meta": [
+    {
+      "label": "Geometry3K"
+    },
+    {
+      "label": "#2171"
+    },
+    {
+      "label": "engine as CAS · no canvas",
+      "tag": true
+    }
+  ],
+  "question": "R S is the midsegment of trapezoid M N O P. What is the length of R S?",
+  "choices": [
+    {
+      "key": "A",
+      "value": "14"
+    },
+    {
+      "key": "B",
+      "value": "19"
+    },
+    {
+      "key": "C",
+      "value": "23"
+    },
+    {
+      "key": "D",
+      "value": "26"
+    }
+  ],
+  "expected": "D",
+  "input_image": "assets/demos/geometry3k_2171_input.png",
+  "viewport": [
+    -10.0,
+    10.0,
+    -10.0,
+    10.0
+  ],
+  "turns": [
+    {
+      "index": 1,
+      "phase": null,
+      "signal": null,
+      "summary": "1 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "query_solve",
+            "args": {
+              "name": "sol_x",
+              "equation": "9*x - 1 = (10*x + 3 + 4*x + 7) / 2",
+              "variable": "x"
+            }
+          },
+          "cmd": "sol_x = Solve(9*x - 1 = (10*x + 3 + 4*x + 7) / 2, x)",
+          "ok": true,
+          "diff": [
+            [
+              "sol_x",
+              "numeric",
+              "sol_x = sol_x = {x = 3}"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "phase": null,
+      "signal": null,
+      "summary": "1 ok",
+      "steps": [
+        {
+          "raw": {
+            "tool": "query_solve",
+            "args": {
+              "name": "RS_length",
+              "equation": "9*3 - 1 = y",
+              "variable": "y"
+            }
+          },
+          "cmd": "RS_length = Solve(9*3 - 1 = y, y)",
+          "ok": true,
+          "diff": [
+            [
+              "RS_length",
+              "numeric",
+              "RS_length = RS_length = {y = 26}"
+            ]
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "phase": null,
+      "signal": "answer_emit",
+      "summary": "0 ok",
+      "steps": []
+    }
+  ],
+  "answer": {
+    "value": "26",
+    "choice": "D"
+  }
+}

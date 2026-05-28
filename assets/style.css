@@ -507,10 +507,12 @@ code, pre {
 }
 .demo-selector button:hover { color: var(--accent-dark); border-color: var(--accent); }
 
-/* Folded (inactive): short box showing only the id token. */
+/* Folded (inactive): short box showing only the id token. These yield
+   space FIRST — flex-shrink:1 + min-width:0 lets them squeeze down so
+   the active pill always fits in full. */
 .demo-selector button:not(.active) {
   flex: 0 1 auto;
-  max-width: 76px;
+  max-width: 72px;
   padding: 8px 12px;
 }
 .demo-selector button:not(.active) .pill-bench,
@@ -520,10 +522,11 @@ code, pre {
   text-overflow: ellipsis;
 }
 
-/* Expanded (active): grows to show bench + id + tag, accent fill,
-   with the white label centered in the widened box. */
+/* Expanded (active): sized to its FULL content and never shrinks
+   (flex-shrink:0), so bench + id + tag are always shown complete; it
+   still grows to take leftover room, label centered. */
 .demo-selector button.active {
-  flex: 1 1 auto;
+  flex: 1 0 auto;
   max-width: 100%;
   justify-content: center;
   background: var(--accent);
